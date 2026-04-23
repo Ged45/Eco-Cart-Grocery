@@ -3,6 +3,10 @@
   background: #0f172a;
   color: #ffffff;
   padding: 40px 200px 20px;
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
 }
 
 /* Grid container */
@@ -16,12 +20,18 @@
 @media (max-width: 900px) {
   .footer {
     padding: 40px 40px 20px;
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
 }
 
 @media (max-width: 600px) {
   .footer {
     padding: 30px 10px 10px;
+    width: 100vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
   .footer-container {
     grid-template-columns: 1fr;
