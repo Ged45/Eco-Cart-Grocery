@@ -54,6 +54,7 @@ function AboutPage() {
           accessible to everyone. We work directly with local farmers and
           producers to bring you the freshest products while supporting our
           community and protecting the environment. Our commitment to quality,
+          <br />
           sustainability, and customer satisfaction drives everything we do.
         </p>
       </section>
