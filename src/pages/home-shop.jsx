@@ -14,12 +14,17 @@ const categories = [
   "Seafood",
 ];
 
+const productsWithStock = MOCK_PRODUCTS.map((product) => ({
+  ...product,
+  outOfStock: Math.random() < 0.1, // 10% chance
+}));
+
 const HomeShop = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [organicOnly, setOrganicOnly] = useState(false);
 
-  const filteredProducts = MOCK_PRODUCTS.filter((product) => {
+  const filteredProducts = productsWithStock.filter((product) => {
     const matchesCategory =
       selectedCategory === "All" || product.category === selectedCategory;
 
@@ -31,6 +36,8 @@ const HomeShop = () => {
 
     return matchesCategory && matchesSearch && matchesOrganic;
   });
+
+  
 
   return (
     <div
@@ -62,7 +69,7 @@ const HomeShop = () => {
         />
       </div>
 
-      
+
       {/* Categories */}
       <div className="flex gap-2 flex-wrap mb-4">
         {categories.map((cat) => (
