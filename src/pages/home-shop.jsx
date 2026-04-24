@@ -48,7 +48,7 @@ const HomeShop = () => {
       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">
         Browse Products
       </h1>
-      <h2 className="text-sm sm:text-base text-gray-500 mb-4 max-w-2xl mb-8">
+      <h2 className="text-sm sm:text-base text-gray-500 max-w-2xl mb-8">
         Discover fresh, sustainable groceries delivered to your door
       </h2>
 
