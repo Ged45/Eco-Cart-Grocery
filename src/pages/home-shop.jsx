@@ -17,7 +17,7 @@ const categories = [
 
 const productsWithStock = MOCK_PRODUCTS.map((product) => ({
   ...product,
-  outOfStock: Math.random() < 0.1, // 10% chance
+  outOfStock: Math.random() < 0.2, // 20% chance
 }));
 
 const HomeShop = () => {
@@ -52,7 +52,7 @@ const HomeShop = () => {
         Discover fresh, sustainable groceries delivered to your door
       </h2>
 
-      <div className="relative w-full mb-4">
+      <div className="relative w-full mb-8">
         <Search
           className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
           size={18}
@@ -74,11 +74,11 @@ const HomeShop = () => {
             key={cat}
             onClick={() => setSelectedCategory(cat)}
             className={`px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full transition
-              ${
-                selectedCategory === cat
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-200 hover:bg-gray-300"
-              }`}
+    ${
+      selectedCategory === cat
+        ? "bg-green-600 text-white "
+        : "bg-white border border-gray-300 hover:border-x-green-500 hover:border-b-green-500 hover:border-l-green-500 hover:border-r-green-500"
+    }`}
           >
             {cat}
           </button>
@@ -89,11 +89,11 @@ const HomeShop = () => {
       <div className="flex flex-row mb-6 items-center gap-4 mt-2">
         <button
           onClick={() => setOrganicOnly(!organicOnly)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm transition
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition
     ${
       organicOnly
-        ? "bg-green-100 text-green-700"
-        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+        ? "bg-green-100 text-green-700 border border-green-400"
+        : "bg-white border border-gray-300 text-black hover:border-green-500"
     }`}
         >
           <Leaf size={16} />
