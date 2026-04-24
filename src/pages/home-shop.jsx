@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
+import { Leaf } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ProductCard from "../components/ProductsCard.jsx";
 import { MOCK_PRODUCTS } from "../assets/products.js";
@@ -37,11 +38,9 @@ const HomeShop = () => {
     return matchesCategory && matchesSearch && matchesOrganic;
   });
 
-  
-
   return (
     <div
-      className="flex flex-col bg-gray-50 min-h-screen
+      className="flex flex-col bg-green-50 min-h-screen
                     px-4 sm:px-6 md:px-10 lg:px-20 xl:px-32
                     py-6 sm:py-8 md:py-10"
     >
@@ -49,10 +48,9 @@ const HomeShop = () => {
       <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">
         Browse Products
       </h1>
-      <h2 className="text-sm sm:text-base text-gray-500 mb-4 max-w-2xl">
+      <h2 className="text-sm sm:text-base text-gray-500 mb-4 max-w-2xl mb-8">
         Discover fresh, sustainable groceries delivered to your door
       </h2>
-
 
       <div className="relative w-full mb-4">
         <Search
@@ -63,12 +61,11 @@ const HomeShop = () => {
         <input
           type="text"
           placeholder="Search products..."
-          className="w-full pl-10 pr-3 py-2 sm:py-3 rounded-lg border"
+          className="w-full pl-10 pr-3 py-2 sm:py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-1 focus:ring-green-500 transition"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-
 
       {/* Categories */}
       <div className="flex gap-2 flex-wrap mb-4">
@@ -79,7 +76,7 @@ const HomeShop = () => {
             className={`px-3 sm:px-4 py-1 text-xs sm:text-sm rounded-full transition
               ${
                 selectedCategory === cat
-                  ? "bg-green-500 text-white"
+                  ? "bg-green-600 text-white"
                   : "bg-gray-200 hover:bg-gray-300"
               }`}
           >
@@ -87,19 +84,27 @@ const HomeShop = () => {
           </button>
         ))}
       </div>
+
       {/* Organic Filter */}
-      <div className="flex items-center gap-2 mb-4 text-sm sm:text-base">
-        <input
-          type="checkbox"
-          checked={organicOnly}
-          onChange={() => setOrganicOnly(!organicOnly)}
-        />
-        <label>Organic Only</label>
+      <div className="flex flex-row mb-6 items-center gap-4 mt-2">
+        <button
+          onClick={() => setOrganicOnly(!organicOnly)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm transition
+    ${
+      organicOnly
+        ? "bg-green-100 text-green-700"
+        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+    }`}
+        >
+          <Leaf size={16} />
+          Organic Only
+        </button>
+        {/* Product Count */}
+        <p className="text-gray-500 text-sm">
+          {filteredProducts.length} products found
+        </p>
       </div>
-      {/* Product Count */}
-      <p className="text-gray-500 text-sm mb-4">
-        {filteredProducts.length} products found
-      </p>
+
       {/* Grid */}
       <motion.div
         layout
