@@ -1,10 +1,11 @@
-
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import "../styles/header.css";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { totalItems, setIsCartOpen } = useCart();
 
   return (
     <header className="header">
@@ -18,7 +19,7 @@ function Header() {
           </div>
         </div>
 
-        {/* Hamburger Icon for mobile */}
+        {/* Hamburger Icon */}
         <button
           className="hamburger"
           aria-label="Toggle navigation menu"
@@ -29,16 +30,66 @@ function Header() {
 
         {/* Navigation */}
         <nav className={`nav${menuOpen ? " nav-open" : ""}`}>
-          <NavLink to="/shop" className="link hover" onClick={() => setMenuOpen(false)}>Shop</NavLink>
-          <NavLink to="/categories" className="link hv" onClick={() => setMenuOpen(false)}>Categories</NavLink>
-          <NavLink to="/cart" className="link hv" onClick={() => setMenuOpen(false)}>Cart</NavLink>
-          <NavLink to="/about" className="link hv" onClick={() => setMenuOpen(false)}>About</NavLink>
-          <NavLink to="/contact" className="link hv" onClick={() => setMenuOpen(false)}>Contact</NavLink>
-          <NavLink to="/account" className="link hv" onClick={() => setMenuOpen(false)}>Account</NavLink>
+          <NavLink
+            to="/"
+            className="link hover"
+            onClick={() => setMenuOpen(false)}
+          >
+            Shop
+          </NavLink>
+          <NavLink
+            to="/categories"
+            className="link hv"
+            onClick={() => setMenuOpen(false)}
+          >
+            Categories
+          </NavLink>
+          <NavLink
+            to="/cart"
+            className="link hv"
+            onClick={() => setMenuOpen(false)}
+          >
+            Cart
+          </NavLink>
+          <NavLink
+            to="/about"
+            className="link hv"
+            onClick={() => setMenuOpen(false)}
+          >
+            About
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className="link hv"
+            onClick={() => setMenuOpen(false)}
+          >
+            Contact
+          </NavLink>
+          <NavLink
+            to="/account"
+            className="link hv"
+            onClick={() => setMenuOpen(false)}
+          >
+            Account
+          </NavLink>
         </nav>
 
-        {/* Cart */}
-        <div className="cart">🛒</div>
+        {/* Cart Icon with Badge */}
+        <div
+          className="relative cursor-pointer"
+          onClick={() => setIsCartOpen(true)}
+        >
+          <span className="text-xl">🛒</span>
+
+          {totalItems > 0 && (
+            <span
+              className="absolute -top-2 -right-2 bg-green-600 text-white text-xs 
+                         w-5 h-5 flex items-center justify-center rounded-full"
+            >
+              {totalItems}
+            </span>
+          )}
+        </div>
       </div>
     </header>
   );

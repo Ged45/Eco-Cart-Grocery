@@ -1,24 +1,26 @@
 import { useState } from "react";
+import { useCart } from "../context/CartContext";
 
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   return (
-    <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 
-                    shadow-sm hover:shadow-xl/30 
-                    transform hover:-translate-y-1 
-                    transition duration-300 ease-in-out
-                    hover: cursor-pointer
-                    ${product.outOfStock ? "opacity-80" : ""}
-                    `}>
-      
+    <div
+      className={`bg-white rounded-2xl p-4 flex flex-col gap-3 
+      shadow-sm hover:shadow-xl/30 
+      transform hover:-translate-y-1 
+      transition duration-300 ease-in-out
+      hover: cursor-pointer
+      ${product.outOfStock ? "opacity-80" : ""}`}
+    >
       <div className="relative overflow-hidden rounded-xl">
         <img
           src={product.image}
           alt={product.name}
           className={`w-full h-40 object-cover 
-                     transition duration-300 ease-in-out 
-                     ${product.outOfStock ? "grayscale" : "hover:scale-110"}`}
+          transition duration-300 ease-in-out 
+          ${product.outOfStock ? "grayscale" : "hover:scale-110"}`}
         />
 
         {product.organic && !product.outOfStock && (
@@ -27,7 +29,6 @@ const ProductCard = ({ product }) => {
           </span>
         )}
 
-        {/* OUT OF STOCK OVERLAY */}
         {product.outOfStock && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-xl">
             <span className="text-white font-semibold text-sm">
@@ -51,7 +52,7 @@ const ProductCard = ({ product }) => {
         <button
           disabled={product.outOfStock}
           onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-          className="px-3 py-1 bg-gray-100 rounded-lg hover: cursor-pointer disabled:opacity-50"
+          className="px-3 py-1 bg-gray-100 rounded-lg disabled:opacity-50"
         >
           -
         </button>
@@ -61,7 +62,7 @@ const ProductCard = ({ product }) => {
         <button
           disabled={product.outOfStock}
           onClick={() => setQuantity((q) => q + 1)}
-          className="px-3 py-1 bg-gray-100 rounded-lg hover: cursor-pointer disabled:opacity-50"
+          className="px-3 py-1 bg-gray-100 rounded-lg disabled:opacity-50"
         >
           +
         </button>
@@ -69,7 +70,8 @@ const ProductCard = ({ product }) => {
 
       <button
         disabled={product.outOfStock}
-        className={`mt-auto py-2 rounded-xl text-white transition hover: cursor-pointer
+        onClick={() => addToCart(product, quantity)}
+        className={`mt-auto py-2 rounded-xl text-white transition
         ${
           product.outOfStock
             ? "bg-gray-400 cursor-not-allowed"
