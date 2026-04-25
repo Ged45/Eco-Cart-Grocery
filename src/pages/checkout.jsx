@@ -1,92 +1,70 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Checkout() {
+function Checkout() {
   const [step, setStep] = useState(1);
 
   return (
-    <div className="px-10 py-6 bg-gray-50 min-h-screen">
-      
-      {/* Back */}
-      <p className="text-gray-500 cursor-pointer mb-2">← Back to Cart</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-10 font-sans">
+      <div className="w-full max-w-6xl">
+        <p className="text-gray-500 cursor-pointer mb-2">← Back to Cart</p>
+        <h1 className="text-3xl font-semibold mb-6">Checkout</h1>
 
-      <h1 className="text-3xl font-semibold mb-6">Checkout</h1>
-
-      {/* Stepper */}
-      <div className="flex items-center justify-center gap-16 mb-10">
-        <Step label="Shipping" active={step === 1} />
-        <div className="w-24 h-[2px] bg-gray-300" />
-        <Step label="Payment" active={step === 2} />
-        <div className="w-24 h-[2px] bg-gray-300" />
-        <Step label="Review" active={step === 3} />
-      </div>
-
-      <div className="grid grid-cols-3 gap-8">
-        
-        {/* LEFT */}
-        <div className="col-span-2">
-          <AnimatePresence mode="wait">
-            
-            {step === 1 && (
-              <motion.div key="shipping" {...animation}>
-                <Shipping onNext={() => setStep(2)} />
-              </motion.div>
-            )}
-
-            {step === 2 && (
-              <motion.div key="payment" {...animation}>
-                <Payment
-                  onNext={() => setStep(3)}
-                  onBack={() => setStep(1)}
-                />
-              </motion.div>
-            )}
-
-            {step === 3 && (
-              <motion.div key="review" {...animation}>
-                <Review onBack={() => setStep(2)} />
-              </motion.div>
-            )}
-
-          </AnimatePresence>
+        {/* Steps */}
+        <div className="flex justify-center gap-10 mb-6">
+          <Step label="Shipping" active={step === 1} />
+          <Step label="Payment" active={step === 2} />
+          <Step label="Review" active={step === 3} />
         </div>
 
-        {/* RIGHT - Order Summary */}
-        <div className="bg-white rounded-xl shadow-sm p-5 h-fit">
-          <h3 className="font-semibold mb-4">Order Summary</h3>
+        <div className="flex gap-6">
+          {/* LEFT */}
+          <div className="flex-[3]">
+            <AnimatePresence mode="wait">
+              {step === 1 && (
+                <motion.div key="shipping" {...animation}>
+                  <Shipping onNext={() => setStep(2)} />
+                </motion.div>
+              )}
 
-          <div className="flex gap-3 items-center">
-            <img
-              src="https://via.placeholder.com/60"
-              className="w-14 h-14 rounded-lg"
-            />
-            <div>
-              <p className="text-sm font-medium">Organic Spinach</p>
-              <p className="text-xs text-gray-500">Qty: 1</p>
-              <p className="text-sm">$3.99</p>
-            </div>
+              {step === 2 && (
+                <motion.div key="payment" {...animation}>
+                  <Payment
+                    onNext={() => setStep(3)}
+                    onBack={() => setStep(1)}
+                  />
+                </motion.div>
+              )}
+
+              {step === 3 && (
+                <motion.div key="review" {...animation}>
+                  <Review onBack={() => setStep(2)} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
-          <hr className="my-4" />
+          {/* RIGHT */}
+          <div className="flex-1 bg-white p-5 rounded-xl shadow-sm">
+            <h3 className="font-semibold mb-4">Order Summary</h3>
 
-          <div className="text-sm space-y-2">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>$3.99</span>
+            <div className="flex gap-3 items-center">
+              <img src="https://via.placeholder.com/60" className="rounded" />
+              <div>
+                <p className="font-medium">Organic Spinach</p>
+                <small className="text-gray-500">Qty: 1</small>
+                <p>$3.99</p>
+              </div>
             </div>
-            <div className="flex justify-between">
-              <span>Shipping</span>
-              <span>$4.99</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Tax</span>
-              <span>$0.32</span>
-            </div>
-          </div>
 
-          <div className="flex justify-between mt-4 font-semibold">
-            <span>Total</span>
-            <span className="text-green-600">$9.30</span>
+            <hr className="my-4" />
+
+            <p>Subtotal: $3.99</p>
+            <p>Shipping: $4.99</p>
+            <p>Tax: $0.32</p>
+            <h4 className="font-semibold mt-2">
+              Total: <span className="text-green-600">$9.30</span>
+            </h4>
           </div>
         </div>
       </div>
@@ -94,63 +72,79 @@ export default function Checkout() {
   );
 }
 
-/* ---------------- ANIMATION ---------------- */
-
-const animation = {
-  initial: { opacity: 0, x: 40 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -40 },
-  transition: { duration: 0.25 },
-};
-
-/* ---------------- STEPPER ---------------- */
-
+/* STEP */
 function Step({ label, active }) {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex items-center gap-2">
       <motion.div
-        className="w-10 h-10 rounded-full flex items-center justify-center"
+        className="w-7 h-7 rounded-full"
         animate={{
-          backgroundColor: active ? "#16a34a" : "#e5e7eb",
+          backgroundColor: active ? "#16a34a" : "#ddd",
+          scale: active ? 1.2 : 1,
         }}
-      >
-        <div className="w-4 h-4 bg-white rounded-sm" />
-      </motion.div>
-      <span
-        className={`text-sm mt-2 ${
-          active ? "text-green-600 font-medium" : "text-gray-400"
-        }`}
-      >
+      />
+      <span className={active ? "text-green-600" : "text-gray-400"}>
         {label}
       </span>
     </div>
   );
 }
 
-/* ---------------- SHIPPING ---------------- */
-
+/* SHIPPING */
 function Shipping({ onNext }) {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const validate = () => {
+    let e = {};
+
+    if (!form.name) e.name = "Required";
+    if (!form.email) e.email = "Required";
+    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Invalid email";
+
+    if (!form.phone) e.phone = "Required";
+    if (!form.address) e.address = "Required";
+    if (!form.city) e.city = "Required";
+    if (!form.state) e.state = "Required";
+    if (!form.zip) e.zip = "Required";
+
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
+    <div className="bg-white p-6 rounded-xl shadow-sm space-y-4">
       <h3 className="font-semibold">Shipping Information</h3>
 
-      <div className="grid grid-cols-2 gap-4">
-        <Input placeholder="Full Name" />
-        <Input placeholder="Email" />
+      <div className="grid grid-cols-2 gap-3">
+        <Field name="name" placeholder="Full Name" value={form.name} onChange={handleChange} error={errors.name} />
+        <Field name="email" placeholder="Email" value={form.email} onChange={handleChange} error={errors.email} />
       </div>
 
-      <Input placeholder="Phone Number" />
-      <Input placeholder="Street Address" />
+      <Field name="phone" placeholder="Phone Number" value={form.phone} onChange={handleChange} error={errors.phone} />
+      <Field name="address" placeholder="Street Address" value={form.address} onChange={handleChange} error={errors.address} />
 
-      <div className="grid grid-cols-3 gap-4">
-        <Input placeholder="City" />
-        <Input placeholder="State" />
-        <Input placeholder="ZIP Code" />
+      <div className="grid grid-cols-3 gap-3">
+        <Field name="city" placeholder="City" value={form.city} onChange={handleChange} error={errors.city} />
+        <Field name="state" placeholder="State" value={form.state} onChange={handleChange} error={errors.state} />
+        <Field name="zip" placeholder="ZIP Code" value={form.zip} onChange={handleChange} error={errors.zip} />
       </div>
 
       <button
-        onClick={onNext}
-        className="w-full bg-green-600 text-white py-3 rounded-lg mt-2 hover:bg-green-700"
+        className="w-full bg-green-600 text-white py-3 rounded-lg"
+        onClick={() => validate() && onNext()}
       >
         Continue to Payment →
       </button>
@@ -158,32 +152,51 @@ function Shipping({ onNext }) {
   );
 }
 
-/* ---------------- PAYMENT ---------------- */
-
+/* PAYMENT */
 function Payment({ onNext, onBack }) {
+  const [form, setForm] = useState({
+    card: "",
+    name: "",
+    expiry: "",
+    cvv: "",
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const validate = () => {
+    let e = {};
+
+    if (!form.card || form.card.length < 12) e.card = "Invalid";
+    if (!form.name) e.name = "Required";
+    if (!form.expiry) e.expiry = "Required";
+    if (!form.cvv || form.cvv.length < 3) e.cvv = "Invalid";
+
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
+    <div className="bg-white p-6 rounded-xl shadow-sm space-y-4">
       <h3 className="font-semibold">Payment Information</h3>
 
-      <Input placeholder="Card Number" />
-      <Input placeholder="Cardholder Name" />
+      <Field name="card" placeholder="Card Number" value={form.card} onChange={handleChange} error={errors.card} />
+      <Field name="name" placeholder="Cardholder Name" value={form.name} onChange={handleChange} error={errors.name} />
 
-      <div className="grid grid-cols-2 gap-4">
-        <Input placeholder="MM/YY" />
-        <Input placeholder="CVV" />
+      <div className="grid grid-cols-2 gap-3">
+        <Field name="expiry" placeholder="MM/YY" value={form.expiry} onChange={handleChange} error={errors.expiry} />
+        <Field name="cvv" placeholder="CVV" value={form.cvv} onChange={handleChange} error={errors.cvv} />
       </div>
 
-      <div className="flex gap-4 mt-2">
-        <button
-          onClick={onBack}
-          className="flex-1 border rounded-lg py-3"
-        >
+      <div className="flex gap-3">
+        <button className="flex-1 border rounded-lg py-3" onClick={onBack}>
           Back
         </button>
-
         <button
-          onClick={onNext}
-          className="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700"
+          className="flex-1 bg-green-600 text-white py-3 rounded-lg"
+          onClick={() => validate() && onNext()}
         >
           Review Order →
         </button>
@@ -192,45 +205,19 @@ function Payment({ onNext, onBack }) {
   );
 }
 
-/* ---------------- REVIEW ---------------- */
-
+/* REVIEW */
 function Review({ onBack }) {
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex justify-between">
-          <h3 className="font-semibold">Shipping Address</h3>
-          <span className="text-green-600 cursor-pointer text-sm">Edit</span>
-        </div>
+    <div className="bg-white p-6 rounded-xl shadow-sm space-y-4">
+      <h3 className="font-semibold">Review Order</h3>
 
-        <div className="text-sm text-gray-600 mt-2">
-          <p>John Doe</p>
-          <p>Addis Ababa, Ethiopia</p>
-          <p>john@email.com</p>
-          <p>+251900000000</p>
-        </div>
-      </div>
+      <p>Shipping & Payment details look good.</p>
 
-      <div className="bg-white rounded-xl shadow-sm p-6">
-        <div className="flex justify-between">
-          <h3 className="font-semibold">Payment Method</h3>
-          <span className="text-green-600 cursor-pointer text-sm">Edit</span>
-        </div>
-
-        <p className="text-sm text-gray-600 mt-2">
-          Card ending in 1234
-        </p>
-      </div>
-
-      <div className="flex gap-4">
-        <button
-          onClick={onBack}
-          className="flex-1 border rounded-lg py-3"
-        >
+      <div className="flex gap-3">
+        <button className="flex-1 border rounded-lg py-3" onClick={onBack}>
           Back
         </button>
-
-        <button className="flex-1 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700">
+        <button className="flex-1 bg-green-600 text-white py-3 rounded-lg">
           Place Order ✓
         </button>
       </div>
@@ -238,13 +225,29 @@ function Review({ onBack }) {
   );
 }
 
-/* ---------------- INPUT ---------------- */
-
-function Input({ placeholder }) {
+/* FIELD */
+function Field({ name, placeholder, value, onChange, error }) {
   return (
-    <input
-      placeholder={placeholder}
-      className="border rounded-lg px-4 py-3 w-full outline-none focus:ring-2 focus:ring-green-500"
-    />
+    <div>
+      <input
+        name={name}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className={`w-full p-3 rounded-lg border ${
+          error ? "border-red-500" : "border-gray-200"
+        }`}
+      />
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+    </div>
   );
 }
+
+/* ANIMATION */
+const animation = {
+  initial: { opacity: 0, x: 60 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -60 },
+};
+
+export default Checkout;
