@@ -1,10 +1,16 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../styles/signup.css";
 
 function Signup() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    name: "",
+    fullName: "",
     email: "",
+    phone: "",
     password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
@@ -16,40 +22,75 @@ function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    alert("Account created successfully");
+    navigate("/login");
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
+    <div className="signup-container">
+      <div className="signup-box">
+        <h2>Create Account</h2>
+        <p>Join Eco-Cart for a better shopping experience</p>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Full name"
-          value={formData.name}
-          onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="fullName"
+            placeholder="Full Name"
+            value={formData.fullName}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter email"
-          value={formData.email}
-          onChange={handleChange}
-        />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Create password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+          <input
+            type="text"
+            name="phone"
+            placeholder="Phone Number"
+            value={formData.phone}
+            onChange={handleChange}
+            required
+          />
 
-        <button type="submit">Create Account</button>
-      </form>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit">Create Account</button>
+        </form>
+
+        <p className="bottom-text">
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </div>
     </div>
   );
 }
