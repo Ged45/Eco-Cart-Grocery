@@ -73,3 +73,56 @@
   text-decoration: none;
   font-weight: bold;
 }
+input:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  text-align: left;
+  margin-top: -10px;
+}
+
+/* smooth button feel */
+button {
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+.strength-meter {
+  text-align: left;
+  margin-top: -10px;
+  margin-bottom: 10px;
+}
+
+.strength-bar {
+  height: 6px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+}
+
+.strength-1 {
+  width: 25%;
+  background-color: red;
+}
+
+.strength-2 {
+  width: 50%;
+  background-color: orange;
+}
+
+.strength-3,
+.strength-4 {
+  width: 100%;
+  background-color: green;
+}
+
+.strength-text {
+  font-size: 12px;
+}

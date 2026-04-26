@@ -3,6 +3,7 @@ import App from "./App";
 import HomeShop from "./pages/home-shop";
 import Signup from "./pages/signup";  
 import Login from "./pages/login";
+import ForgotPassword from "./pages/forgotpassword";
 
 // Pages
 import Checkout from "./pages/checkout";
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
 {
   path: "/login",
   element: <Login />,
+},
+      {
+  path: "/forgotpassword",
+  element: <ForgotPassword />,
 }
       
       

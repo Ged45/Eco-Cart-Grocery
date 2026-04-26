@@ -14,18 +14,45 @@ function Login() {
     password: "",
   });
 
+  const [errors, setErrors] = useState({});
+
+  const validate = (name, value) => {
+    let newErrors = { ...errors };
+
+    if (name === "email") {
+      if (!value.includes("@")) {
+        newErrors.email = "Enter a valid email";
+      } else {
+        delete newErrors.email;
+      }
+    }
+
+    if (name === "password") {
+      if (value.length < 6) {
+        newErrors.password = "At least 6 characters";
+      } else {
+        delete newErrors.password;
+      }
+    }
+
+    setErrors(newErrors);
+  };
+
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
+
+    validate(name, value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.password) {
-      alert("Please fill all fields");
+    if (Object.keys(errors).length > 0 || !formData.email || !formData.password) {
       return;
     }
 
@@ -33,7 +60,6 @@ function Login() {
 
     setTimeout(() => {
       setLoading(false);
-      alert("Login successful");
       navigate("/");
     }, 1000);
   };
@@ -51,8 +77,8 @@ function Login() {
             placeholder="Email Address"
             value={formData.email}
             onChange={handleChange}
-            required
           />
+          {errors.email && <span className="error">{errors.email}</span>}
 
           <div className="password-wrapper">
             <input
@@ -61,9 +87,7 @@ function Login() {
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              required
             />
-
             <span
               className="eye-icon"
               onClick={() => setShowPassword(!showPassword)}
@@ -71,12 +95,16 @@ function Login() {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
+          {errors.password && <span className="error">{errors.password}</span>}
 
           <div className="forgot-password">
-            <Link to="/forgot-password">Forgot Password?</Link>
+            <Link to="/forgotpassword">Forgot Password?</Link>
           </div>
 
-          <button type="submit" disabled={loading}>
+          <button
+            type="submit"
+            disabled={loading || Object.keys(errors).length > 0}
+          >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>

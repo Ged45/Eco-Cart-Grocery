@@ -101,3 +101,24 @@
   font-size: 14px;
   font-weight: 500;
 }
+input:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  text-align: left;
+  margin-top: -10px;
+}
+
+/* smooth button feel */
+button {
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
