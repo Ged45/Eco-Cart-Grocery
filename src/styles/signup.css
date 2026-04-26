@@ -1,3 +1,6 @@
+/* =========================
+   LAYOUT
+========================= */
 .signup-container {
   min-height: 100vh;
   display: flex;
@@ -7,6 +10,9 @@
   padding: 20px;
 }
 
+/* =========================
+   CARD
+========================= */
 .signup-box {
   width: 420px;
   background: white;
@@ -26,19 +32,53 @@
   color: #666;
 }
 
+/* =========================
+   FORM
+========================= */
 .signup-box form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
+/* INPUTS */
 .signup-box input {
   padding: 14px;
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
+/* focus state */
+.signup-box input:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+}
+
+/* =========================
+   LABELS
+========================= */
+.input-label {
+  display: block;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 6px;
+  margin-top: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   BUTTON
+========================= */
 .signup-box button {
   padding: 14px;
   border: none;
@@ -47,22 +87,20 @@
   color: white;
   font-size: 16px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .signup-box button:hover {
   background-color: #256428;
 }
 
-.toggle-password-btn {
-  background-color: #f0f0f0 !important;
-  color: #333 !important;
-  border: 1px solid #ccc !important;
+.signup-box button:active {
+  transform: scale(0.97);
 }
 
-.toggle-password-btn:hover {
-  background-color: #e2e2e2 !important;
-}
-
+/* =========================
+   TEXT LINKS
+========================= */
 .bottom-text {
   margin-top: 20px;
   font-size: 14px;
@@ -73,27 +111,53 @@
   text-decoration: none;
   font-weight: bold;
 }
-input:focus {
-  border-color: #2e7d32;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+
+/* =========================
+   PASSWORD FIELD (FIXED)
+========================= */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
 }
 
+/* important fix: stable height */
+.password-wrapper input {
+  width: 100%;
+  padding-right: 40px;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+/* eye icon FIXED */
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #666;
+
+  /* ensures perfect alignment stability */
+  display: flex;
+  align-items: center;
+}
+
+/* =========================
+   VALIDATION
+========================= */
 .error {
-  color: red;
+  color: #d32f2f;
   font-size: 12px;
   text-align: left;
   margin-top: -10px;
 }
 
-/* smooth button feel */
-button {
-  transition: all 0.2s ease;
-}
-
-button:active {
-  transform: scale(0.97);
-}
+/* =========================
+   STRENGTH METER
+========================= */
 .strength-meter {
   text-align: left;
   margin-top: -10px;
@@ -109,20 +173,34 @@ button:active {
 
 .strength-1 {
   width: 25%;
-  background-color: red;
+  background-color: #e53935;
 }
 
 .strength-2 {
   width: 50%;
-  background-color: orange;
+  background-color: #fb8c00;
 }
 
 .strength-3,
 .strength-4 {
   width: 100%;
-  background-color: green;
+  background-color: #43a047;
 }
 
 .strength-text {
   font-size: 12px;
+  color: #555;
+}
+
+/* =========================
+   SUCCESS MESSAGE
+========================= */
+.success-message {
+  background-color: #e6f4ea;
+  color: #2e7d32;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-align: center;
 }

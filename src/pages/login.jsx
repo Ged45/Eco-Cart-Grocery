@@ -16,6 +16,8 @@ function Login() {
 
   const [errors, setErrors] = useState({});
 
+  const [formError, setFormError] = useState("");
+
   const validate = (name, value) => {
     let newErrors = { ...errors };
 
@@ -49,28 +51,52 @@ function Login() {
     validate(name, value);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    if (Object.keys(errors).length > 0 || !formData.email || !formData.password) {
-      return;
-    }
+  setFormError("");
 
-    setLoading(true);
+  let newErrors = {};
 
-    setTimeout(() => {
-      setLoading(false);
-      navigate("/");
-    }, 1000);
-  };
+  if (!formData.email) {
+    newErrors.email = "Email is required";
+  }
 
+  if (!formData.password) {
+    newErrors.password = "Password is required";
+  }
+
+  if (Object.values(formData).every((v) => !v)) {
+    setFormError("Please fill in your email and password");
+    setErrors(newErrors);
+    return;
+  }
+
+  if (Object.keys(newErrors).length > 0 || Object.keys(errors).length > 0) {
+    setErrors({ ...errors, ...newErrors });
+    return;
+  }
+
+  setLoading(true);
+
+  setTimeout(() => {
+    setLoading(false);
+    navigate("/");
+  }, 1000);
+};
   return (
     <div className="login-container">
       <div className="login-box">
         <h2>Welcome Back</h2>
         <p>Login to your Eco-Cart account</p>
-
+{formError && (
+  <div className="form-error">
+    {formError}
+  </div>
+)}
         <form onSubmit={handleSubmit}>
+          <div className="form-group">
+          <label className="input-label">Email</label>
           <input
             type="email"
             name="email"
@@ -79,6 +105,9 @@ function Login() {
             onChange={handleChange}
           />
           {errors.email && <span className="error">{errors.email}</span>}
+</div>
+<div className="form-group">
+            <label className="input-label">Password</label>
 
           <div className="password-wrapper">
             <input
@@ -96,7 +125,7 @@ function Login() {
             </span>
           </div>
           {errors.password && <span className="error">{errors.password}</span>}
-
+</div>
           <div className="forgot-password">
             <Link to="/forgotpassword">Forgot Password?</Link>
           </div>

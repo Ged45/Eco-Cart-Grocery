@@ -6,7 +6,6 @@ import "../styles/signup.css";
 function Signup() {
   const navigate = useNavigate();
 
-  // State
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -21,7 +20,9 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Password strength function
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // Password strength
   const getPasswordStrength = (password) => {
     if (!password) return { label: "", strength: 0 };
 
@@ -39,39 +40,26 @@ function Signup() {
 
   const passwordStrength = getPasswordStrength(formData.password);
 
-  // Validation
+  // Validate field
   const validate = (name, value) => {
     let newErrors = { ...errors };
 
-    if (name === "email") {
-      if (!value.includes("@")) {
-        newErrors.email = "Enter a valid email";
-      } else {
-        delete newErrors.email;
-      }
+    if (!value) {
+      newErrors[name] = "This field is required";
+    } else {
+      delete newErrors[name];
     }
 
-    if (name === "password") {
-      if (value.length < 6) {
-        newErrors.password = "At least 6 characters";
-      } else {
-        delete newErrors.password;
-      }
-
-      // Re-check confirm password when password changes
-      if (formData.confirmPassword && value !== formData.confirmPassword) {
-        newErrors.confirmPassword = "Passwords do not match";
-      } else {
-        delete newErrors.confirmPassword;
-      }
+    if (name === "email" && value && !value.includes("@")) {
+      newErrors.email = "Enter a valid email";
     }
 
-    if (name === "confirmPassword") {
-      if (value !== formData.password) {
-        newErrors.confirmPassword = "Passwords do not match";
-      } else {
-        delete newErrors.confirmPassword;
-      }
+    if (name === "password" && value && value.length < 6) {
+      newErrors.password = "At least 6 characters";
+    }
+
+    if (name === "confirmPassword" && value !== formData.password) {
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
@@ -81,10 +69,10 @@ function Signup() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
-    });
+    }));
 
     validate(name, value);
   };
@@ -93,17 +81,26 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Alert ONLY if entire form is empty
+    setSuccessMessage("");
+
+    let newErrors = {};
+
+    // Required field validation
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key]) {
+        newErrors[key] = "This field is required";
+      }
+    });
+
+    // If all empty → stop early
     if (Object.values(formData).every((v) => !v)) {
-      alert("Please fill out the form");
+      setErrors(newErrors);
       return;
     }
 
-    // Block submission if errors or missing fields
-    if (
-      Object.keys(errors).length > 0 ||
-      Object.values(formData).some((v) => !v)
-    ) {
+    // Combine validation errors
+    if (Object.keys(newErrors).length > 0 || Object.keys(errors).length > 0) {
+      setErrors((prev) => ({ ...prev, ...newErrors }));
       return;
     }
 
@@ -111,7 +108,12 @@ function Signup() {
 
     setTimeout(() => {
       setLoading(false);
-      navigate("/login");
+
+      setSuccessMessage("Account created successfully! Redirecting...");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1200);
     }, 1000);
   };
 
@@ -121,7 +123,15 @@ function Signup() {
         <h2>Create Account</h2>
         <p>Join Eco-Cart for a better shopping experience</p>
 
+        {/* SUCCESS MESSAGE */}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div>
+        )}
+
         <form onSubmit={handleSubmit}>
+          {/* FULL NAME */}
+          <div className="form-group">
+          <label className="input-label">Full Name</label>
           <input
             type="text"
             name="fullName"
@@ -129,7 +139,11 @@ function Signup() {
             value={formData.fullName}
             onChange={handleChange}
           />
-
+          {errors.fullName && <span className="error">{errors.fullName}</span>}
+</div>
+          {/* EMAIL */}
+          <div className="form-group">
+          <label className="input-label">Email Address</label>
           <input
             type="email"
             name="email"
@@ -138,7 +152,10 @@ function Signup() {
             onChange={handleChange}
           />
           {errors.email && <span className="error">{errors.email}</span>}
-
+</div>
+          {/* PHONE */}
+          <div className="form-group"> 
+          <label className="input-label">Phone Number</label>
           <input
             type="text"
             name="phone"
@@ -146,8 +163,11 @@ function Signup() {
             value={formData.phone}
             onChange={handleChange}
           />
-
+          {errors.phone && <span className="error">{errors.phone}</span>}
+</div>
           {/* PASSWORD */}
+          <div className="form-group">
+              <label className="input-label">Password</label>
           <div className="password-wrapper">
             <input
               type={showPassword ? "text" : "password"}
@@ -156,20 +176,14 @@ function Signup() {
               value={formData.password}
               onChange={handleChange}
             />
-            <span
-              className="eye-icon"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+            <span 
+            className="eye-icon"
+            onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
 
           {errors.password && <span className="error">{errors.password}</span>}
-
-          {/* PASSWORD HINT */}
-          <small className="hint">
-            Use at least 6 characters, including a number and uppercase letter
-          </small>
 
           {/* STRENGTH METER */}
           {formData.password && (
@@ -182,8 +196,10 @@ function Signup() {
               </span>
             </div>
           )}
-
+</div>
           {/* CONFIRM PASSWORD */}
+          <div className="form-group">
+              <label className="input-label">Confirm Password</label>
           <div className="password-wrapper">
             <input
               type={showConfirmPassword ? "text" : "password"}
@@ -193,7 +209,7 @@ function Signup() {
               onChange={handleChange}
             />
             <span
-              className="eye-icon"
+            className="eye-icon"
               onClick={() =>
                 setShowConfirmPassword(!showConfirmPassword)
               }
@@ -205,11 +221,9 @@ function Signup() {
           {errors.confirmPassword && (
             <span className="error">{errors.confirmPassword}</span>
           )}
-
-          <button
-            type="submit"
-            disabled={loading || Object.keys(errors).length > 0}
-          >
+</div>
+          {/* SUBMIT BUTTON */}
+          <button type="submit" disabled={loading}>
             {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>
