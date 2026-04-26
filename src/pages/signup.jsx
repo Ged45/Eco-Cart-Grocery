@@ -5,6 +5,9 @@ import "../styles/signup.css";
 function Signup() {
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -23,13 +26,29 @@ function Signup() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (
+      !formData.fullName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.password ||
+      !formData.confirmPassword
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match");
       return;
     }
 
-    alert("Account created successfully");
-    navigate("/login");
+    setLoading(true);
+
+    setTimeout(() => {
+      setLoading(false);
+      alert("Account created successfully");
+      navigate("/login");
+    }, 1000);
   };
 
   return (
@@ -67,7 +86,7 @@ function Signup() {
           />
 
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
             value={formData.password}
@@ -76,7 +95,7 @@ function Signup() {
           />
 
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="confirmPassword"
             placeholder="Confirm Password"
             value={formData.confirmPassword}
@@ -84,7 +103,17 @@ function Signup() {
             required
           />
 
-          <button type="submit">Create Account</button>
+          <button
+            type="button"
+            className="toggle-password-btn"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? "Hide Passwords" : "Show Passwords"}
+          </button>
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating Account..." : "Create Account"}
+          </button>
         </form>
 
         <p className="bottom-text">

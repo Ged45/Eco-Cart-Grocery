@@ -53,6 +53,16 @@
   background-color: #256428;
 }
 
+.toggle-password-btn {
+  background-color: #f0f0f0 !important;
+  color: #333 !important;
+  border: 1px solid #ccc !important;
+}
+
+.toggle-password-btn:hover {
+  background-color: #e2e2e2 !important;
+}
+
 .bottom-text {
   margin-top: 20px;
   font-size: 14px;
@@ -62,4 +72,32 @@
   color: #2e7d32;
   text-decoration: none;
   font-weight: bold;
+}
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 15px;
+  top: 35%;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.forgot-password {
+  text-align: right;
+  margin-top: -8px;
+  margin-bottom: 10px;
+}
+
+.forgot-password a {
+  text-decoration: none;
+  color: #2e7d32;
+  font-size: 14px;
+  font-weight: 500;
 }
