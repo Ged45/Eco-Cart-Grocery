@@ -1,10 +1,33 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
+
+   const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
+  const handleAddToCart = (e) => {
+  e.stopPropagation(); // Prevents navigation to Product Detail
+  // Logic to add to cart...
+};
+
+const handleIncrement = (e) => {
+  e.stopPropagation(); // Prevents navigation to Product Detail
+  setQuantity((q) => q + 1);
+};
+
+const handleDecrement = (e) => {
+  e.stopPropagation(); // Prevents navigation to Product Detail
+  setQuantity((q) => Math.max(1, q - 1));
+};
 
   return (
-    <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 
+    <div 
+      onClick={handleCardClick}
+      className={`bg-white rounded-2xl p-4 flex flex-col gap-3 
                     shadow-sm hover:shadow-xl/30 
                     transform hover:-translate-y-1 
                     transition duration-300 ease-in-out
@@ -48,9 +71,10 @@ const ProductCard = ({ product }) => {
       </p>
 
       <div className="flex items-center gap-2">
+        
         <button
           disabled={product.outOfStock}
-          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+          onClick={handleDecrement}
           className="px-3 py-1 bg-gray-100 rounded-lg hover: cursor-pointer disabled:opacity-50"
         >
           -
@@ -60,7 +84,7 @@ const ProductCard = ({ product }) => {
 
         <button
           disabled={product.outOfStock}
-          onClick={() => setQuantity((q) => q + 1)}
+          onClick={handleIncrement}
           className="px-3 py-1 bg-gray-100 rounded-lg hover: cursor-pointer disabled:opacity-50"
         >
           +
@@ -68,6 +92,7 @@ const ProductCard = ({ product }) => {
       </div>
 
       <button
+        onClick={handleAddToCart}
         disabled={product.outOfStock}
         className={`mt-auto py-2 rounded-xl text-white transition hover: cursor-pointer
         ${
