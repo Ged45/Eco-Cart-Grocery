@@ -16,6 +16,7 @@ const Categories = () => {
     { title: 'Seafood', description: 'Browse our fresh seafood', icon: '🐟' },
   ];
 
+
   const categoriesWithCounts = categoryDefinitions.map((cat) => {
     const count = MOCK_PRODUCTS.filter(p => p.category === cat.title).length;
     return { ...cat, count };
@@ -36,7 +37,7 @@ const Categories = () => {
             description={cat.description} 
             count={cat.count} 
             icon={cat.icon} 
-           
+            onClick={() => navigate(`/?category=${cat.title}`)}
           />
         ))}
       </div>
