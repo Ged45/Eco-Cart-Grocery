@@ -9,7 +9,7 @@ function App() {
       <Header />
 
       <CartDrawer />
-      <Outlet />
+      
 
       <Outlet /> {/* pages go here */}
 

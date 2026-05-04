@@ -3,17 +3,24 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Check, X, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { MOCK_PRODUCTS } from '../assets/products'; 
 import ProductCard from '../components/ProductsCard';
+import { useCart } from '../context/CartContext';
 
 const ProductDetail = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   const product = MOCK_PRODUCTS.find((p) => p.id === String(productId));
   const isOutOfStock = Boolean(product?.outOfStock);
 
   const handleIncrement = () => setQuantity((q) => q + 1);
   const handleDecrement = () => setQuantity((q) => Math.max(1, q - 1));
+  const handleAddToCart = () => addToCart(product, quantity);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [productId]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -118,6 +125,7 @@ const ProductDetail = () => {
 
             <button 
               disabled={isOutOfStock}
+              onClick={handleAddToCart}
               className={`w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
                 isOutOfStock 
                 ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 

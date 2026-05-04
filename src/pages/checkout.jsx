@@ -1,13 +1,36 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 function Checkout() {
   const [step, setStep] = useState(1);
+  const navigate = useNavigate();
+  const { cartItems } = useCart();
+
+  // Redirect to cart if empty
+  if (cartItems.length === 0) {
+    navigate("/cart");
+    return null;
+  }
+
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + (item?.price ?? 0) * (item?.quantity ?? 0),
+    0
+  );
+  const shipping = subtotal > 50 ? 0 : 5.99;
+  const tax = subtotal * 0.08;
+  const total = subtotal + shipping + tax;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-10 font-sans">
       <div className="w-full max-w-6xl">
-        <p className="text-gray-500 cursor-pointer mb-2">← Back to Cart</p>
+        <p 
+          className="text-gray-500 cursor-pointer mb-2 hover:text-gray-700"
+          onClick={() => navigate("/cart")}
+        >
+          ← Back to Cart
+        </p>
         <h1 className="text-3xl font-semibold mb-6">Checkout</h1>
 
         {/* Steps */}
@@ -47,24 +70,35 @@ function Checkout() {
           {/* RIGHT */}
           <div className="flex-1 bg-white p-5 rounded-xl shadow-sm">
             <h3 className="font-semibold mb-4">Order Summary</h3>
-
-            <div className="flex gap-3 items-center">
-              <img src="https://via.placeholder.com/60" className="rounded" />
-              <div>
-                <p className="font-medium">Organic Spinach</p>
-                <small className="text-gray-500">Qty: 1</small>
-                <p>$3.99</p>
-              </div>
+            
+            {/* Cart Items */}
+            <div className="space-y-3 mb-4">
+              {cartItems.map((item) => (
+                <div key={item.id} className="flex gap-3 items-center">
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="w-12 h-12 rounded object-cover" 
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium text-sm">{item.name}</p>
+                    <small className="text-gray-500">Qty: {item.quantity}</small>
+                  </div>
+                  <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                </div>
+              ))}
             </div>
 
             <hr className="my-4" />
 
-            <p>Subtotal: $3.99</p>
-            <p>Shipping: $4.99</p>
-            <p>Tax: $0.32</p>
-            <h4 className="font-semibold mt-2">
-              Total: <span className="text-green-600">$9.30</span>
-            </h4>
+            <div className="space-y-2">
+              <p>Subtotal: ${(subtotal || 0).toFixed(2)}</p>
+              <p>Shipping: ${(shipping || 0).toFixed(2)}</p>
+              <p>Tax: ${(tax || 0).toFixed(2)}</p>
+              <h4 className="font-semibold mt-2">
+                Total: <span className="text-green-600">${(total || 0).toFixed(2)}</span>
+              </h4>
+            </div>
           </div>
         </div>
       </div>

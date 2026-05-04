@@ -1,45 +1,45 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
-   const handleCardClick = () => {
+  const handleImageClick = () => {
     navigate(`/product/${product.id}`);
   };
 
   const handleAddToCart = (e) => {
-  e.stopPropagation(); // Prevents navigation to Product Detail
-  // Logic to add to cart...
-};
+    e.stopPropagation(); // Prevents navigation
+    addToCart(product, quantity);
+  };
 
-const handleIncrement = (e) => {
-  e.stopPropagation(); // Prevents navigation to Product Detail
-  setQuantity((q) => q + 1);
-};
+  const handleIncrement = (e) => {
+    e.stopPropagation(); // Prevents navigation
+    setQuantity((q) => q + 1);
+  };
 
-const handleDecrement = (e) => {
-  e.stopPropagation(); // Prevents navigation to Product Detail
-  setQuantity((q) => Math.max(1, q - 1));
-};
+  const handleDecrement = (e) => {
+    e.stopPropagation(); // Prevents navigation
+    setQuantity((q) => Math.max(1, q - 1));
+  };
 
   return (
-    <div 
-      onClick={handleCardClick}
+    <div
       className={`bg-white rounded-2xl p-4 flex flex-col gap-3 
-                    shadow-sm hover:shadow-xl/30 
-                    transform hover:-translate-y-1 
-                    transition duration-300 ease-in-out
-                    hover: cursor-pointer
-                    ${product.outOfStock ? "opacity-80" : ""}
-                    `}>
-      
+      shadow-sm hover:shadow-xl/30 
+      transform hover:-translate-y-1 
+      transition duration-300 ease-in-out
+      ${product.outOfStock ? "opacity-80" : ""}`}
+    >
       <div className="relative overflow-hidden rounded-xl">
         <img
           src={product.image}
           alt={product.name}
-          className={`w-full h-40 object-cover 
+          onClick={handleImageClick}
+          className={`w-full h-40 object-cover cursor-pointer
           transition duration-300 ease-in-out 
           ${product.outOfStock ? "grayscale" : "hover:scale-110"}`}
         />
@@ -70,11 +70,10 @@ const handleDecrement = (e) => {
       </p>
 
       <div className="flex items-center gap-2">
-        
         <button
           disabled={product.outOfStock}
           onClick={handleDecrement}
-          className="px-3 py-1 bg-gray-100 rounded-lg hover: cursor-pointer disabled:opacity-50"
+          className="px-3 py-1 bg-gray-100 rounded-lg disabled:opacity-50"
         >
           -
         </button>
@@ -84,7 +83,7 @@ const handleDecrement = (e) => {
         <button
           disabled={product.outOfStock}
           onClick={handleIncrement}
-          className="px-3 py-1 bg-gray-100 rounded-lg hover: cursor-pointer disabled:opacity-50"
+          className="px-3 py-1 bg-gray-100 rounded-lg disabled:opacity-50"
         >
           +
         </button>
@@ -93,7 +92,6 @@ const handleDecrement = (e) => {
       <button
         onClick={handleAddToCart}
         disabled={product.outOfStock}
-        onClick={() => addToCart(product, quantity)}
         className={`mt-auto py-2 rounded-xl text-white transition
         ${
           product.outOfStock
@@ -108,3 +106,4 @@ const handleDecrement = (e) => {
 };
 
 export default ProductCard;
+        
