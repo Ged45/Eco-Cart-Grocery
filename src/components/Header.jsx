@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingBag, Leaf, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { useCart } from "./CartContext";
+
 
 import { useCart } from "../context/CartContext";
 import { ShoppingCart } from "./ShoppingCart";
