@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "./App";
+ import App from "./App";
 import HomeShop from "./pages/home-shop";
+import Contact from "./pages/contact";
 
 
 // Pages
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
 
 
      { path: "checkout", element: <Checkout /> },
+     { path: "contact", element: <Contact /> },
 
      {
         path: "/", 
