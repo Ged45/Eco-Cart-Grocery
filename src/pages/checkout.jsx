@@ -1,13 +1,54 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 function Checkout() {
   const [step, setStep] = useState(1);
+  const [orderPlaced, setOrderPlaced] = useState(false);
+  const navigate = useNavigate();
+  const { cartItems, placeOrder } = useCart();
+
+  const handlePlaceOrder = () => {
+    if (cartItems.length === 0) return;
+
+    setOrderPlaced(true);
+    placeOrder();
+  };
+
+  useEffect(() => {
+    if (!orderPlaced) return;
+
+    const timer = setTimeout(() => {
+      navigate("/account?tab=orders");
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [orderPlaced, navigate]);
+
+  useEffect(() => {
+    if (cartItems.length === 0 && !orderPlaced) {
+      navigate("/cart");
+    }
+  }, [cartItems.length, orderPlaced, navigate]);
+
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + (item?.price ?? 0) * (item?.quantity ?? 0),
+    0
+  );
+  const shipping = subtotal > 50 ? 0 : 5.99;
+  const tax = subtotal * 0.08;
+  const total = subtotal + shipping + tax;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-10 font-sans">
       <div className="w-full max-w-6xl">
-        <p className="text-gray-500 cursor-pointer mb-2">← Back to Cart</p>
+        <p 
+          className="text-gray-500 cursor-pointer mb-2 hover:text-gray-700"
+          onClick={() => navigate("/cart")}
+        >
+          ← Back to Cart
+        </p>
         <h1 className="text-3xl font-semibold mb-6">Checkout</h1>
 
         {/* Steps */}
@@ -38,7 +79,7 @@ function Checkout() {
 
               {step === 3 && (
                 <motion.div key="review" {...animation}>
-                  <Review onBack={() => setStep(2)} />
+                  <Review onBack={() => setStep(2)} onPlaceOrder={handlePlaceOrder} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -47,27 +88,48 @@ function Checkout() {
           {/* RIGHT */}
           <div className="flex-1 bg-white p-5 rounded-xl shadow-sm">
             <h3 className="font-semibold mb-4">Order Summary</h3>
-
-            <div className="flex gap-3 items-center">
-              <img src="https://via.placeholder.com/60" className="rounded" />
-              <div>
-                <p className="font-medium">Organic Spinach</p>
-                <small className="text-gray-500">Qty: 1</small>
-                <p>$3.99</p>
-              </div>
+            
+            {/* Cart Items */}
+            <div className="space-y-3 mb-4">
+              {cartItems.map((item) => (
+                <div key={item.id} className="flex gap-3 items-center">
+                  <img 
+                    src={item.image} 
+                    alt={item.name} 
+                    className="w-12 h-12 rounded object-cover" 
+                  />
+                  <div className="flex-1">
+                    <p className="font-medium text-sm">{item.name}</p>
+                    <small className="text-gray-500">Qty: {item.quantity}</small>
+                  </div>
+                  <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                </div>
+              ))}
             </div>
 
             <hr className="my-4" />
 
-            <p>Subtotal: $3.99</p>
-            <p>Shipping: $4.99</p>
-            <p>Tax: $0.32</p>
-            <h4 className="font-semibold mt-2">
-              Total: <span className="text-green-600">$9.30</span>
-            </h4>
+            <div className="space-y-2">
+              <p>Subtotal: ${(subtotal || 0).toFixed(2)}</p>
+              <p>Shipping: ${(shipping || 0).toFixed(2)}</p>
+              <p>Tax: ${(tax || 0).toFixed(2)}</p>
+              <h4 className="font-semibold mt-2">
+                Total: <span className="text-green-600">${(total || 0).toFixed(2)}</span>
+              </h4>
+            </div>
           </div>
         </div>
       </div>
+
+      {orderPlaced && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6">
+          <div className="max-w-sm w-full bg-white rounded-3xl p-6 text-center shadow-2xl">
+            <h2 className="text-2xl font-bold text-green-700 mb-2">Order Placed!</h2>
+            <p className="text-gray-600 mb-4">Your order was placed successfully.</p>
+            <p className="text-sm text-gray-500">Redirecting to your orders...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -143,6 +205,7 @@ function Shipping({ onNext }) {
       </div>
 
       <button
+        type="button"
         className="w-full bg-green-600 text-white py-3 rounded-lg"
         onClick={() => validate() && onNext()}
       >
@@ -195,6 +258,7 @@ function Payment({ onNext, onBack }) {
           Back
         </button>
         <button
+          type="button"
           className="flex-1 bg-green-600 text-white py-3 rounded-lg"
           onClick={() => validate() && onNext()}
         >
@@ -206,7 +270,7 @@ function Payment({ onNext, onBack }) {
 }
 
 /* REVIEW */
-function Review({ onBack }) {
+function Review({ onBack, onPlaceOrder }) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm space-y-4">
       <h3 className="font-semibold">Review Order</h3>
@@ -214,10 +278,14 @@ function Review({ onBack }) {
       <p>Shipping & Payment details look good.</p>
 
       <div className="flex gap-3">
-        <button className="flex-1 border rounded-lg py-3" onClick={onBack}>
+        <button type="button" className="flex-1 border rounded-lg py-3" onClick={onBack}>
           Back
         </button>
-        <button className="flex-1 bg-green-600 text-white py-3 rounded-lg">
+        <button
+          type="button"
+          className="flex-1 bg-green-600 text-white py-3 rounded-lg"
+          onClick={onPlaceOrder}
+        >
           Place Order ✓
         </button>
       </div>

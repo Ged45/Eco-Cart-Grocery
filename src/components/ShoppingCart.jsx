@@ -1,5 +1,6 @@
 import { X, ShoppingBag, Trash2, Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export function ShoppingCart({
   isOpen,
@@ -9,12 +10,12 @@ export function ShoppingCart({
   onRemoveItem,
 }) {
   const total = cartItems.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + (item?.price ?? 0) * (item?.quantity ?? 0),
     0
   );
 
   const itemCount = cartItems.reduce(
-    (sum, item) => sum + item.quantity,
+    (sum, item) => sum + (item?.quantity ?? 0),
     0
   );
 
@@ -76,7 +77,7 @@ export function ShoppingCart({
                   <AnimatePresence>
                     {cartItems.map((item) => (
                       <motion.div
-                        key={item.product.id}
+                        key={item.id}
                         layout
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -84,28 +85,24 @@ export function ShoppingCart({
                         className="flex gap-4 bg-gray-50 p-4 rounded-lg"
                       >
                         <img
-                          src={item.product.image}
-                          alt={item.product.name}
+                          src={item.image}
+                          alt={item.name}
                           className="w-20 h-20 object-cover rounded-lg"
                         />
 
                         <div className="flex-1">
                           <h3 className="font-medium text-gray-900 mb-1">
-                            {item.product.name}
+                            {item.name}
                           </h3>
 
                           <p className="text-sm text-gray-500 mb-2">
-                            ${item.product.price.toFixed(2)} /{" "}
-                            {item.product.unit}
+                            ${item.price.toFixed(2)} / {item.unit}
                           </p>
 
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() =>
-                                onUpdateQuantity(
-                                  item.product.id,
-                                  item.quantity - 1
-                                )
+                                onUpdateQuantity(item.id, item.quantity - 1)
                               }
                               className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded hover:bg-white"
                             >
@@ -118,10 +115,7 @@ export function ShoppingCart({
 
                             <button
                               onClick={() =>
-                                onUpdateQuantity(
-                                  item.product.id,
-                                  item.quantity + 1
-                                )
+                                onUpdateQuantity(item.id, item.quantity + 1)
                               }
                               className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded hover:bg-white"
                             >
@@ -132,19 +126,14 @@ export function ShoppingCart({
 
                         <div className="flex flex-col items-end justify-between">
                           <button
-                            onClick={() =>
-                              onRemoveItem(item.product.id)
-                            }
+                            onClick={() => onRemoveItem(item.id)}
                             className="p-2 hover:bg-red-50 rounded-lg group"
                           >
                             <Trash2 className="w-4 h-4 text-gray-400 group-hover:text-red-500" />
                           </button>
 
                           <span className="font-semibold text-green-600">
-                            $
-                            {(
-                              item.product.price * item.quantity
-                            ).toFixed(2)}
+                            ${(item.price * item.quantity).toFixed(2)}
                           </span>
                         </div>
                       </motion.div>
@@ -163,7 +152,7 @@ export function ShoppingCart({
                     ${total.toFixed(2)}
                   </span>
                 </div>
-
+                 <Link to="/checkout">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -171,6 +160,7 @@ export function ShoppingCart({
                 >
                   Proceed to Checkout
                 </motion.button>
+                  </Link>
               </div>
             )}
           </motion.div>

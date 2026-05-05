@@ -1,39 +1,55 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
-import HomeShop from "./pages/home-shop";
-import Signup from "./pages/signup";  
-import Login from "./pages/login";
-import ForgotPassword from "./pages/forgotpassword";
+
+import ProductDetail from "./pages/product-detail";
 
 // Pages
+import HomeShop from "./pages/home-shop";
+import Contact from "./pages/contact";
 import Checkout from "./pages/checkout";
+import Account from "./pages/account";
+import Cart from "./pages/cart";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+
+import Categories from "./pages/categories";
+import AboutPage from "./pages/about";
+
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // Layout (Navbar + Footer)
+    element: <App />,
     children: [
 
-     { path: "checkout", element: <Checkout /> },
 
+
+     { path: "checkout", element: <Checkout /> },
+     { path: "contact", element: <Contact /> },
+     { path: "account", element: <Account /> },
+     { path: "login", element: <Login /> },
+     { path: "signup", element: <Signup /> },
      {
         path: "/", 
         element: <HomeShop />,
       },
-        {
-  path: "/signup",
-  element: <Signup />,
-      },
-{
-  path: "/login",
-  element: <Login />,
-},
+      
+      { path: "product/:productId", element: <ProductDetail /> },
+
+      {path: "categories", element: <Categories />},
+      
+
       {
-  path: "/forgotpassword",
-  element: <ForgotPassword />,
-}
+        path: "/cart",
+        element: <Cart />,
+      },
+      {
+        path:"/about",
+        element: <AboutPage />
+      },
       
-      
+
+
     ],
   },
 ]);
