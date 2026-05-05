@@ -10,13 +10,19 @@ import {
   Bell,
   LogOut
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 export function Account() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('profile');
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'profile');
+  const { favoriteItems, removeFavorite, orders } = useCart();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
+    logout();
     navigate('/login');
   };
 
@@ -29,16 +35,67 @@ export function Account() {
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
-  const mockOrders = [
-    { id: '12345', date: '2026-04-18', total: 54.32, status: 'Delivered', items: 8 },
-    { id: '12344', date: '2026-04-12', total: 67.89, status: 'Delivered', items: 12 },
-    { id: '12343', date: '2026-04-05', total: 42.15, status: 'Delivered', items: 6 },
+  const addressList = [
+    {
+      id: 'home',
+      title: 'Home Address',
+      name: user?.fullName || 'John Doe',
+      address: '123 Greenway Avenue, Apt 4B',
+      city: 'San Francisco, CA 94107',
+      phone: user?.phone || '+1 (555) 123-4567',
+    },
+    {
+      id: 'work',
+      title: 'Work Address',
+      name: user?.fullName || 'John Doe',
+      address: '456 Market Street, Floor 12',
+      city: 'San Francisco, CA 94111',
+      phone: user?.phone || '+1 (555) 987-6543',
+    },
   ];
 
-  const mockFavorites = [
-    { id: 1, name: 'Organic Bananas', price: 2.99 },
-    { id: 10, name: 'Organic Apples', price: 4.49 },
-    { id: 6, name: 'Organic Milk', price: 5.99 },
+  const paymentList = [
+    {
+      id: 'visa',
+      label: 'Visa',
+      details: '**** **** **** 4821',
+      expires: '09/28',
+      cardholder: user?.fullName || 'John Doe',
+    },
+    {
+      id: 'paypal',
+      label: 'PayPal',
+      details: user?.email || 'john.doe@email.com',
+      expires: 'Connected',
+      cardholder: 'PayPal Account',
+    },
+  ];
+
+  const settingsList = [
+    {
+      id: 'newsletter',
+      label: 'Email Newsletter',
+      description: 'Receive updates about promotions and new products.',
+      value: 'Subscribed',
+    },
+    {
+      id: 'sms_alerts',
+      label: 'SMS Alerts',
+      description: 'Get shipping and order notifications by text message.',
+      value: 'Enabled',
+    },
+    {
+      id: 'saved_addresses',
+      label: 'Saved Addresses',
+      description: 'Manage locations used for fast checkout.',
+      value: '2 saved',
+    },
+    {
+      id: 'payment_methods',
+      label: 'Payment Methods',
+      description: 'Manage your saved cards and wallets.',
+      value: '2 methods',
+    },
   ];
 
   return (
@@ -119,8 +176,8 @@ export function Account() {
                     </div>
 
                     <div>
-                      <h3 className="text-xl font-bold">John Doe</h3>
-                      <p className="text-gray-600">john.doe@email.com</p>
+                      <h3 className="text-xl font-bold">{user?.fullName || 'User'}</h3>
+                      <p className="text-gray-600">{user?.email || 'user@email.com'}</p>
                       <button className="text-green-600 text-sm mt-2">
                         Change Profile Picture
                       </button>
@@ -128,13 +185,37 @@ export function Account() {
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6">
-                    <input type="text" defaultValue="John" className="input" />
-                    <input type="text" defaultValue="Doe" className="input" />
-                    <input type="email" defaultValue="john.doe@email.com" className="input" />
-                    <input type="tel" defaultValue="+1 (555) 123-4567" className="input" />
+                    <input
+                      type="text"
+                      defaultValue={user?.firstName || ''}
+                      placeholder="First Name"
+                      className="input"
+                    />
+                    <input
+                      type="text"
+                      defaultValue={user?.lastName || ''}
+                      placeholder="Last Name"
+                      className="input"
+                    />
+                    <input
+                      type="email"
+                      defaultValue={user?.email || ''}
+                      placeholder="Email"
+                      className="input"
+                    />
+                    <input
+                      type="tel"
+                      defaultValue={user?.phone || ''}
+                      placeholder="Phone"
+                      className="input"
+                    />
                   </div>
 
-                  <motion.button className="btn">
+                  <motion.button className="btn"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold">
+                  
                     Save Changes
                   </motion.button>
 
@@ -147,13 +228,28 @@ export function Account() {
               <div>
                 <h2 className="text-2xl font-bold mb-6">Order History</h2>
 
-                {mockOrders.map(order => (
-                  <div key={order.id} className="border p-4 rounded-lg mb-4">
-                    <p>Order #{order.id}</p>
-                    <p>{order.date}</p>
-                    <p>${order.total}</p>
+                {orders.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p className="text-lg font-medium mb-2">No orders yet</p>
+                    <p>Place an order from checkout to see it here.</p>
                   </div>
-                ))}
+                ) : (
+                  orders.map((order) => (
+                    <div key={order.id} className="border p-4 rounded-lg mb-4">
+                      <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+                        <div>
+                          <p className="font-semibold">Order #{order.id}</p>
+                          <p className="text-sm text-gray-500">{order.date}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold">${order.total.toFixed(2)}</p>
+                          <p className="text-sm text-gray-500">{order.itemCount} items</p>
+                        </div>
+                      </div>
+                      <p className="text-sm text-green-700 mt-3">{order.status}</p>
+                    </div>
+                  ))
+                )}
               </div>
             )}
 
@@ -162,17 +258,97 @@ export function Account() {
               <div>
                 <h2 className="text-2xl font-bold mb-6">Favorites</h2>
 
-                {mockFavorites.map(p => (
-                  <div key={p.id} className="flex justify-between p-4 border rounded-lg mb-3">
-                    <span>{p.name}</span>
-                    <span>${p.price}</span>
+                {favoriteItems.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-gray-300 p-8 text-center text-gray-500">
+                    <p className="text-lg font-medium mb-2">No favorites yet</p>
+                    <p>Add products from the home page to see them here.</p>
+                  </div>
+                ) : (
+                  favoriteItems.map((p) => (
+                    <div
+                      key={p.id}
+                      className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg mb-3 gap-3"
+                    >
+                      <div>
+                        <p className="font-medium text-gray-900">{p.name}</p>
+                        <p className="text-sm text-gray-500">{p.category}</p>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="font-semibold text-green-600">${p.price.toFixed(2)}</span>
+                        <button
+                          onClick={() => removeFavorite(p.id)}
+                          className="text-red-600 hover:text-red-800 text-sm"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            {/* ADDRESSES */}
+            {activeTab === 'addresses' && (
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Saved Addresses</h2>
+
+                {addressList.map((address) => (
+                  <div key={address.id} className="border rounded-xl p-5 mb-4 bg-green-50">
+                    <div className="flex justify-between items-start gap-4 mb-3">
+                      <div>
+                        <p className="font-semibold text-gray-900">{address.title}</p>
+                        <p className="text-sm text-gray-500">{address.name}</p>
+                      </div>
+                      <span className="text-sm text-green-700 font-semibold">Primary</span>
+                    </div>
+                    <p className="text-gray-700">{address.address}</p>
+                    <p className="text-gray-700">{address.city}</p>
+                    <p className="text-gray-500 text-sm mt-2">{address.phone}</p>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* OTHER TABS (unchanged UI logic) */}
-            
+            {/* PAYMENT */}
+            {activeTab === 'payment' && (
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Payment Methods</h2>
+
+                {paymentList.map((payment) => (
+                  <div key={payment.id} className="border rounded-xl p-5 mb-4 bg-blue-50">
+                    <div className="flex justify-between items-center gap-4 mb-3">
+                      <div>
+                        <p className="font-semibold text-gray-900">{payment.label}</p>
+                        <p className="text-sm text-gray-500">{payment.cardholder}</p>
+                      </div>
+                      <span className="text-sm text-blue-700 font-semibold">{payment.expires}</span>
+                    </div>
+                    <p className="text-gray-700">{payment.details}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* SETTINGS */}
+            {activeTab === 'settings' && (
+              <div>
+                <h2 className="text-2xl font-bold mb-6">Account Settings</h2>
+
+                {settingsList.map((setting) => (
+                  <div key={setting.id} className="border rounded-xl p-5 mb-4 bg-white">
+                    <div className="flex justify-between items-start gap-4">
+                      <div>
+                        <p className="font-semibold text-gray-900">{setting.label}</p>
+                        <p className="text-sm text-gray-500">{setting.description}</p>
+                      </div>
+                      <span className="text-sm text-gray-700 font-semibold">{setting.value}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
           </div>
         </motion.div>
 
