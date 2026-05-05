@@ -15,7 +15,7 @@
 ========================= */
 .login-box {
   width: 400px;
-  background: white;
+  background: #fff;
   padding: 35px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -41,6 +41,20 @@
   gap: 15px;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+/* Inputs */
 .login-box input {
   padding: 14px;
   border: 1px solid #ccc;
@@ -48,20 +62,8 @@
   font-size: 14px;
   transition: all 0.2s ease;
 }
-.input-label {
-  display: block;
-  text-align: left;
-  font-size: 13px;
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 6px;
-  margin-top: 10px;
-}
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-/* focus state */
+
+/* Focus state */
 .login-box input:focus {
   border-color: #2e7d32;
   outline: none;
@@ -73,7 +75,6 @@
 ========================= */
 .password-wrapper {
   position: relative;
-  width: 100%;
 }
 
 .password-wrapper input {
@@ -83,12 +84,13 @@
 
 .eye-icon {
   position: absolute;
-  right: 15px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  font-size: 18px;
   color: #666;
+  background: none;
+  border: none;
 }
 
 /* =========================
@@ -99,7 +101,7 @@
   border: none;
   border-radius: 8px;
   background-color: #2e7d32;
-  color: white;
+  color: #fff;
   font-size: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -114,7 +116,7 @@
 }
 
 /* =========================
-   LINKS / TEXT
+   LINKS
 ========================= */
 .bottom-text {
   margin-top: 20px;
@@ -134,20 +136,19 @@
 }
 
 .forgot-password a {
-  text-decoration: none;
   color: #2e7d32;
+  text-decoration: none;
   font-size: 14px;
   font-weight: 500;
 }
 
 /* =========================
-   VALIDATION STATES
+   ERROR STATES
 ========================= */
-.error {
+.error-text {
   color: #d32f2f;
-  font-size: 12px;
-  text-align: left;
-  margin-top: -10px;
+  font-size: 14px;
+  margin-top: -5px;
 }
 
 .form-error {
@@ -159,4 +160,3 @@
   font-size: 14px;
   text-align: center;
 }
-
