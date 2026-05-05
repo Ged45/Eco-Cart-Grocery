@@ -1,18 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
 function Checkout() {
   const [step, setStep] = useState(1);
+  const [orderPlaced, setOrderPlaced] = useState(false);
   const navigate = useNavigate();
-  const { cartItems } = useCart();
+  const { cartItems, placeOrder } = useCart();
 
-  // Redirect to cart if empty
-  if (cartItems.length === 0) {
-    navigate("/cart");
-    return null;
-  }
+  const handlePlaceOrder = () => {
+    if (cartItems.length === 0) return;
+
+    setOrderPlaced(true);
+    placeOrder();
+  };
+
+  useEffect(() => {
+    if (!orderPlaced) return;
+
+    const timer = setTimeout(() => {
+      navigate("/account?tab=orders");
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [orderPlaced, navigate]);
+
+  useEffect(() => {
+    if (cartItems.length === 0 && !orderPlaced) {
+      navigate("/cart");
+    }
+  }, [cartItems.length, orderPlaced, navigate]);
 
   const subtotal = cartItems.reduce(
     (sum, item) => sum + (item?.price ?? 0) * (item?.quantity ?? 0),
@@ -61,7 +79,7 @@ function Checkout() {
 
               {step === 3 && (
                 <motion.div key="review" {...animation}>
-                  <Review onBack={() => setStep(2)} />
+                  <Review onBack={() => setStep(2)} onPlaceOrder={handlePlaceOrder} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -102,6 +120,16 @@ function Checkout() {
           </div>
         </div>
       </div>
+
+      {orderPlaced && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-6">
+          <div className="max-w-sm w-full bg-white rounded-3xl p-6 text-center shadow-2xl">
+            <h2 className="text-2xl font-bold text-green-700 mb-2">Order Placed!</h2>
+            <p className="text-gray-600 mb-4">Your order was placed successfully.</p>
+            <p className="text-sm text-gray-500">Redirecting to your orders...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -177,6 +205,7 @@ function Shipping({ onNext }) {
       </div>
 
       <button
+        type="button"
         className="w-full bg-green-600 text-white py-3 rounded-lg"
         onClick={() => validate() && onNext()}
       >
@@ -229,6 +258,7 @@ function Payment({ onNext, onBack }) {
           Back
         </button>
         <button
+          type="button"
           className="flex-1 bg-green-600 text-white py-3 rounded-lg"
           onClick={() => validate() && onNext()}
         >
@@ -240,7 +270,7 @@ function Payment({ onNext, onBack }) {
 }
 
 /* REVIEW */
-function Review({ onBack }) {
+function Review({ onBack, onPlaceOrder }) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm space-y-4">
       <h3 className="font-semibold">Review Order</h3>
@@ -248,10 +278,14 @@ function Review({ onBack }) {
       <p>Shipping & Payment details look good.</p>
 
       <div className="flex gap-3">
-        <button className="flex-1 border rounded-lg py-3" onClick={onBack}>
+        <button type="button" className="flex-1 border rounded-lg py-3" onClick={onBack}>
           Back
         </button>
-        <button className="flex-1 bg-green-600 text-white py-3 rounded-lg">
+        <button
+          type="button"
+          className="flex-1 bg-green-600 text-white py-3 rounded-lg"
+          onClick={onPlaceOrder}
+        >
           Place Order ✓
         </button>
       </div>
