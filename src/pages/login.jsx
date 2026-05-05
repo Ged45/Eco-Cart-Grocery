@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +22,16 @@ export function Login() {
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     if (email && password) {
+      // For demo purposes, simulate user data
+      const userData = {
+        fullName: 'John Doe',
+        email: email,
+        phone: '+1 (555) 123-4567',
+        firstName: 'John',
+        lastName: 'Doe'
+      };
+
+      login(userData);
       navigate('/account');
     } else {
       setError('Please enter valid credentials');
