@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { Heart } from "lucide-react";
 
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, toggleFavorite, isFavorite } = useCart();
+  const { isLoggedIn } = useAuth();
+  const favorite = isFavorite(product.id);
 
   const handleImageClick = () => {
     navigate(`/product/${product.id}`);
@@ -13,7 +17,20 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = (e) => {
     e.stopPropagation(); // Prevents navigation
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
     addToCart(product, quantity);
+  };
+
+  const handleToggleFavorite = (e) => {
+    e.stopPropagation();
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    toggleFavorite(product);
   };
 
   const handleIncrement = (e) => {
@@ -43,6 +60,15 @@ const ProductCard = ({ product }) => {
           transition duration-300 ease-in-out 
           ${product.outOfStock ? "grayscale" : "hover:scale-110"}`}
         />
+
+        <button
+          onClick={handleToggleFavorite}
+          className={`absolute top-2 left-2 p-2 rounded-full transition shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500
+            ${favorite ? "bg-red-500 text-white" : "bg-white text-gray-500 hover:bg-green-100"}`}
+          title={favorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          <Heart className="w-5 h-5" />
+        </button>
 
         {product.organic && !product.outOfStock && (
           <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
@@ -92,7 +118,7 @@ const ProductCard = ({ product }) => {
       <button
         onClick={handleAddToCart}
         disabled={product.outOfStock}
-        className={`mt-auto py-2 rounded-xl text-white transition
+        className={`mt-auto py-2 rounded-xl text-white transition w-full
         ${
           product.outOfStock
             ? "bg-gray-400 cursor-not-allowed"

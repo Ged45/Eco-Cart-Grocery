@@ -5,12 +5,15 @@ import router from "./routes";
 import "./styles/tailwind.css";
 
 import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./context/AuthContext";
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <CartProvider>
-    <RouterProvider router={router} />
-  </CartProvider>
+  <AuthProvider>
+    <CartProvider>
+      <RouterProvider router={router} />
+    </CartProvider>
+  </AuthProvider>
 
 );
 

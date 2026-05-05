@@ -20,3 +20,5 @@ export const MOCK_PRODUCTS = [
   { id: '19', name: 'Fresh Shrimp', category: 'Seafood', price: 9.99, unit: 'lb', image: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400&h=400&fit=crop', organic: false, outOfStock: false },
   { id: '20', name: 'Organic Carrots', category: 'Vegetables', price: 1.49, unit: 'lb', image: 'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400&h=400&fit=crop', organic: true, outOfStock: false },
 ];
+
+export const CATEGORIES = ['All', 'Fruits', 'Vegetables', 'Bakery', 'Dairy', 'Meat', 'Seafood'];

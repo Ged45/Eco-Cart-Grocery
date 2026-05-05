@@ -4,19 +4,27 @@ import { ArrowLeft, Check, X, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { MOCK_PRODUCTS } from '../assets/products'; 
 import ProductCard from '../components/ProductsCard';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const ProductDetail = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
+  const { isLoggedIn } = useAuth();
 
   const product = MOCK_PRODUCTS.find((p) => p.id === String(productId));
   const isOutOfStock = Boolean(product?.outOfStock);
 
   const handleIncrement = () => setQuantity((q) => q + 1);
   const handleDecrement = () => setQuantity((q) => Math.max(1, q - 1));
-  const handleAddToCart = () => addToCart(product, quantity);
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    addToCart(product, quantity);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);

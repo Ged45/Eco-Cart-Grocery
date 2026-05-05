@@ -34,7 +34,7 @@ export default function ContactSection() {
 
   return (
     <section className="bg-gradient-to-br from-green-50 to-slate-50 py-8 px-4">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <div className="text-center mb-8 animate-fadeUp">
           <h2 className="text-3xl font-bold text-slate-950">Get in Touch</h2>
           <p className="mt-3 text-slate-700 max-w-xl mx-auto">

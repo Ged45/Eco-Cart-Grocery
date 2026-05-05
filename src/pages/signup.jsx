@@ -12,9 +12,11 @@ import {
   Check
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export function Signup() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -90,7 +92,17 @@ export function Signup() {
 
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    navigate('/login');
+    // Store user data and log them in
+    const userData = {
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      firstName: formData.fullName.split(' ')[0],
+      lastName: formData.fullName.split(' ').slice(1).join(' ')
+    };
+
+    login(userData);
+    navigate('/account');
     setIsLoading(false);
   };
 

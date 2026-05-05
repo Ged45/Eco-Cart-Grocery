@@ -1,5 +1,6 @@
 import { X, ShoppingBag, Trash2, Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export function ShoppingCart({
   isOpen,
@@ -151,7 +152,7 @@ export function ShoppingCart({
                     ${total.toFixed(2)}
                   </span>
                 </div>
-
+                 <Link to="/checkout">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -159,6 +160,7 @@ export function ShoppingCart({
                 >
                   Proceed to Checkout
                 </motion.button>
+                  </Link>
               </div>
             )}
           </motion.div>
