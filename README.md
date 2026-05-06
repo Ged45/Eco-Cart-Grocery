@@ -53,7 +53,7 @@ The UI is designed to be minimal, modern, and responsive across both desktop and
 
 ---
 
-## 📦 Sample Products (from UI)
+## 📦 Sample Products
 
 - Organic Bananas *(Out of Stock)*
 - Fresh Strawberries – **$3.49 / pack**
