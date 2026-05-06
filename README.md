@@ -1,16 +1,82 @@
-# React + Vite
+# 🛒 Eco-Cart Grocery
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive grocery shopping web application built with **React (Vite)**, **JSX**, and **Tailwind CSS**.  
+Eco-Cart focuses on delivering a clean UI and a smooth shopping experience for browsing fresh and sustainable products.
 
-Currently, two official plugins are available:
+🔗 **Live Demo:** https://eco-cart-grocery.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🌿 Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Eco-Cart Grocery is an e-commerce frontend that allows users to:
 
-## Expanding the ESLint configuration
+- Browse grocery products by category
+- Search for items easily
+- Filter organic products
+- View product availability (In stock / Out of stock)
+- Add items to cart with quantity control
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The UI is designed to be minimal, modern, and responsive across both desktop and mobile devices.
+
+---
+
+## 🚀 Tech Stack
+
+- **Frontend:** React (Vite)
+- **Language:** JavaScript (JSX)
+- **Styling:** Tailwind CSS + Custom CSS
+- **Deployment:** Vercel
+
+---
+
+## ✨ Features
+
+- 🔍 **Search Functionality** – Quickly find products
+- 🧭 **Category Filters** – Fruits, Vegetables, Bakery, Dairy, Meat, Seafood
+- 🌱 **Organic Filter Toggle**
+- 🛒 **Add to Cart System**
+- ➕➖ **Quantity Selector**
+- ❌ **Out-of-Stock Handling**
+- ❤️ **Wishlist Icon (UI)**
+- 📱 **Responsive Design (Mobile + Desktop)**
+
+---
+
+## 🖼️ Screenshots
+
+### 💻 Desktop View
+![Desktop Screenshot](./screenshots/desktop.png)
+
+### 📱 Mobile View
+![Mobile Screenshot](./screenshots/mobile.png)
+
+> 📌 Place your images inside a `/screenshots` folder in your repo and name them:
+> - `desktop.png`
+> - `mobile.png`
+
+---
+
+## 📦 Sample Products (from UI)
+
+- Organic Bananas *(Out of Stock)*
+- Fresh Strawberries – **$3.49 / pack**
+- Organic Spinach – **$2.99 / bunch**
+- Fresh Tomatoes – **$1.29 / lb**
+- Whole Wheat Bread – **$3.49 / loaf**
+- Organic Milk *(Out of Stock)*
+- Greek Yogurt *(Out of Stock)*
+- Organic Chicken Breast – **$8.99 / lb**
+
+---
+
+## 🛠️ Installation & Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/eco-cart-grocery.git
+cd eco-cart-grocery
+npm install
+npm run dev
+npm run build
