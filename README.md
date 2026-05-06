@@ -71,7 +71,8 @@ The UI is designed to be minimal, modern, and responsive across both desktop and
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/eco-cart-grocery.git
+git clone https://github.com/Ged45/Eco-Cart-Grocery
+```bash
 cd eco-cart-grocery
 npm install
 npm run dev
