@@ -56,7 +56,7 @@ const HomeShop = () => {
   return (
     <div
       className="flex flex-col bg-green-50 min-h-screen
-                    px-4 sm:px-6 md:px-10 lg:px-20 xl:px-145
+                    px-4 sm:px-6 md:px-10 lg:px-20 xl:px-32
                     py-6 sm:py-8 md:py-10"
     >
       {/* Header */}
