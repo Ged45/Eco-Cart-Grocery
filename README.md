@@ -51,10 +51,6 @@ The UI is designed to be minimal, modern, and responsive across both desktop and
 ### 📱 Mobile View
 ![Mobile Screenshot](./screenshots/mobile.png)
 
-> 📌 Place your images inside a `/screenshots` folder in your repo and name them:
-> - `desktop.png`
-> - `mobile.png`
-
 ---
 
 ## 📦 Sample Products (from UI)
