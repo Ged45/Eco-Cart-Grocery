@@ -71,12 +71,11 @@ The UI is designed to be minimal, modern, and responsive across both desktop and
 Clone the repository:
 
 
-## Alternative: Compact version
+
 
 ```markdown
 ## Commands
 
-```bash
 git clone https://github.com/Ged45/Eco-Cart-Grocery   # closes automatically when done
 cd eco-cart-grocery                                    # completes instantly
 npm install                                            # closes automatically when done
