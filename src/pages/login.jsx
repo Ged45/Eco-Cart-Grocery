@@ -1,217 +1,184 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { motion } from "framer-motion";
-import "../styles/login.css";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Mail, Lock, Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-function Login() {
-  const navigate = useNavigate();
+export function Login() {
+const navigate = useNavigate();
+  const { login } = useAuth();
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
+const [showPassword, setShowPassword] = useState(false);
+const [isLoading, setIsLoading] = useState(false);
+const [error, setError] = useState('');
 
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+const handleSubmit = async (e) => {
+e.preventDefault();
+setError('');
+setIsLoading(true);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+// Simulate API call
+await new Promise(resolve => setTimeout(resolve, 1000));
 
-  const [errors, setErrors] = useState({});
-  const [formError, setFormError] = useState("");
-
-  const validate = (name, value) => {
-    let newErrors = { ...errors };
-
-    if (name === "email") {
-      if (!value.includes("@")) {
-        newErrors.email = "Enter a valid email";
-      } else {
-        delete newErrors.email;
-      }
-    }
-
-    if (name === "password") {
-      if (value.length < 6) {
-        newErrors.password = "At least 6 characters";
-      } else {
-        delete newErrors.password;
-      }
-    }
-
-    setErrors(newErrors);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-
-    validate(name, value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFormError("");
-    setLoading(true);
-
-    let newErrors = {};
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    }
-
-    if (Object.values(formData).every((v) => !v)) {
-      setFormError("Please fill in your email and password");
-      setErrors(newErrors);
-      setLoading(false);
-      return;
-    }
-
-    if (Object.keys(newErrors).length > 0 || Object.keys(errors).length > 0) {
-      setErrors({ ...errors, ...newErrors });
-      setLoading(false);
-      return;
-    }
-
-    // Simulate API call with async/await
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // For demo purposes, you can store user data
+if (email && password) {
+      // For demo purposes, simulate user data
       const userData = {
-        email: formData.email,
-        // Add any other user data you want to store
+        fullName: 'John Doe',
+        email: email,
+        phone: '+1 (555) 123-4567',
+        firstName: 'John',
+        lastName: 'Doe'
       };
-      
-      // You can store user data in localStorage or context here
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      // Navigate to home page
-      navigate("/");
-    } catch (error) {
-      setFormError("Login failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="login-container"
-    >
-      <div className="login-box">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
-        >
-          <h2>Welcome Back</h2>
-          <p>Login to your Eco-Cart account</p>
-
-          {formError && (
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="form-error"
-            >
-              {formError}
-            </motion.div>
-          )}
-
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label className="input-label">Email Address</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="your@email.com"
-                value={formData.email}
-                onChange={handleChange}
-                className={errors.email ? "error-input" : ""}
-              />
-              {errors.email && (
-                <motion.span 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="error"
-                >
-                  {errors.email}
-                </motion.span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label className="input-label">Password</label>
-              <div className="password-wrapper">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  placeholder="Enter your password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={errors.password ? "error-input" : ""}
-                />
-                <span
-                  className="eye-icon"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </span>
-              </div>
-              {errors.password && (
-                <motion.span 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="error"
-                >
-                  {errors.password}
-                </motion.span>
-              )}
-            </div>
-
-            <div className="forgot-password">
-              <Link to="/forgotpassword">Forgot Password?</Link>
-            </div>
-
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              type="submit"
-              disabled={loading || Object.keys(errors).length > 0}
-              className={loading ? "button-loading" : ""}
-            >
-              {loading ? (
-                <>
-                  <span className="spinner"></span>
-                  Logging in...
-                </>
-              ) : (
-                "Login"
-              )}
-            </motion.button>
-          </form>
-
-          <p className="bottom-text">
-            Don't have an account? <Link to="/signup">Sign Up</Link>
-          </p>
-
-          {/* Add security note from teammate's code */}
-          <div className="security-note">
-            🔒 Your information is secure and encrypted
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
+      login(userData);
+navigate('/');
+} else {
+setError('Please enter valid credentials');
 }
 
+setIsLoading(false);
+};
+
+return (
+<div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 py-12 px-4">
+<motion.div
+initial={{ opacity: 0, y: 20 }}
+animate={{ opacity: 1, y: 0 }}
+transition={{ duration: 0.5 }}
+className="max-w-md mx-auto"
+>
+{/* Back button */}
+<Link to="/">
+<motion.button
+whileHover={{ x: -4 }}
+whileTap={{ scale: 0.95 }}
+className="flex items-center gap-2 text-gray-600 hover:text-green-600 mb-6 transition-colors"
+>
+<ArrowLeft className="w-4 h-4" />
+Back to Shop
+</motion.button>
+</Link>
+
+{/* Card */}
+<motion.div
+initial={{ opacity: 0, scale: 0.95 }}
+animate={{ opacity: 1, scale: 1 }}
+transition={{ delay: 0.1 }}
+className="bg-white rounded-2xl shadow-xl p-8"
+>
+{/* Header */}
+<div className="text-center mb-8">
+<motion.div
+initial={{ scale: 0 }}
+animate={{ scale: 1 }}
+transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"
+>
+<LogIn className="w-8 h-8 text-green-600" />
+</motion.div>
+
+<h1 className="text-3xl mb-2">Welcome Back</h1>
+<p className="text-gray-600">Login to your Eco-Cart account</p>
+</div>
+
+{/* Form */}
+<form onSubmit={handleSubmit} className="space-y-6">
+
+{/* Email */}
+<div>
+<label className="block text-sm mb-2">Email Address</label>
+<div className="relative">
+<Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+<input
+type="email"
+value={email}
+onChange={(e) => setEmail(e.target.value)}
+className="w-full pl-11 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+placeholder="your@email.com"
+required
+/>
+</div>
+</div>
+
+{/* Password */}
+<div>
+<label className="block text-sm mb-2">Password</label>
+<div className="relative">
+<Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+
+<input
+type={showPassword ? 'text' : 'password'}
+value={password}
+onChange={(e) => setPassword(e.target.value)}
+className="w-full pl-11 pr-12 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
+placeholder="Enter your password"
+required
+/>
+
+<button
+type="button"
+onClick={() => setShowPassword(!showPassword)}
+className="absolute right-3 top-1/2 -translate-y-1/2"
+>
+{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+</button>
+</div>
+</div>
+
+{/* Error */}
+{error && (
+<div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+{error}
+</div>
+)}
+
+{/* Forgot */}
+<div className="text-right">
+<Link to="/account" className="text-sm text-green-600">
+Forgot password?
+</Link>
+</div>
+
+{/* Submit */}
+<motion.button
+whileHover={{ scale: 1.02 }}
+whileTap={{ scale: 0.98 }}
+type="submit"
+disabled={isLoading}
+className="w-full bg-green-600 text-white py-3 rounded-lg flex justify-center items-center gap-2"
+>
+{isLoading ? (
+<>
+<div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+Logging in...
+</>
+) : (
+<>
+<LogIn size={20} />
+Login
+</>
+)}
+</motion.button>
+</form>
+
+{/* Signup */}
+<div className="mt-6 text-center">
+<p>
+Don't have an account?{' '}
+<Link to="/signup" className="text-green-600">
+Sign up
+</Link>
+</p>
+</div>
+</motion.div>
+
+{/* Footer */}
+<div className="mt-6 text-center text-sm text-gray-500">
+🔒 Your information is secure and encrypted
+</div>
+</motion.div>
+</div>
+);
+}
 export default Login;
