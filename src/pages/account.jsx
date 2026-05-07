@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   User,
@@ -19,11 +19,40 @@ export function Account() {
   const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'profile');
   const { favoriteItems, removeFavorite, orders } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
+
+  const [profileForm, setProfileForm] = useState({
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+  });
+
+  useEffect(() => {
+    if (user) {
+      setProfileForm({
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        email: user.email || '',
+        phone: user.phone || '',
+      });
+    }
+  }, [user]);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleSaveProfile = (event) => {
+    event.preventDefault();
+    updateUser({
+      firstName: profileForm.firstName,
+      lastName: profileForm.lastName,
+      email: profileForm.email,
+      phone: profileForm.phone,
+      fullName: `${profileForm.firstName} ${profileForm.lastName}`,
+    });
   };
 
   const tabs = [
@@ -187,35 +216,41 @@ export function Account() {
                   <div className="grid md:grid-cols-2 gap-6">
                     <input
                       type="text"
-                      defaultValue={user?.firstName || ''}
+                      value={profileForm.firstName}
+                      onChange={(e) => setProfileForm((prev) => ({ ...prev, firstName: e.target.value }))}
                       placeholder="First Name"
                       className="input"
                     />
                     <input
                       type="text"
-                      defaultValue={user?.lastName || ''}
+                      value={profileForm.lastName}
+                      onChange={(e) => setProfileForm((prev) => ({ ...prev, lastName: e.target.value }))}
                       placeholder="Last Name"
                       className="input"
                     />
                     <input
                       type="email"
-                      defaultValue={user?.email || ''}
+                      value={profileForm.email}
+                      onChange={(e) => setProfileForm((prev) => ({ ...prev, email: e.target.value }))}
                       placeholder="Email"
                       className="input"
                     />
                     <input
                       type="tel"
-                      defaultValue={user?.phone || ''}
+                      value={profileForm.phone}
+                      onChange={(e) => setProfileForm((prev) => ({ ...prev, phone: e.target.value }))}
                       placeholder="Phone"
                       className="input"
                     />
                   </div>
 
-                  <motion.button className="btn"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold">
-                  
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleSaveProfile}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold"
+                  >
                     Save Changes
                   </motion.button>
 
