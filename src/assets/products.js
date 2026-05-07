@@ -1,6 +1,6 @@
 export const MOCK_PRODUCTS = [
   { id: '1', name: 'Organic Bananas', category: 'Fruits', price: 0.99, unit: 'lb', image: 'https://images.unsplash.com/photo-1603833665858-e61d17a86224?w=400&h=400&fit=crop', organic: true, outOfStock: false },
-  { id: '2', name: 'Fresh Strawberries', category: 'Fruits', price: 3.49, unit: 'pack', image: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&h=400&fit=crop', organic: false, outOfStock: true },
+  { id: '2', name: 'Fresh Strawberries', category: 'Fruits', price: 3.49, unit: 'pack', image: 'https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400&h=400&fit=crop', organic: false, outOfStock: false },
   { id: '3', name: 'Organic Spinach', category: 'Vegetables', price: 2.99, unit: 'bunch', image: 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400&h=400&fit=crop', organic: true, outOfStock: false },
   { id: '4', name: 'Fresh Tomatoes', category: 'Vegetables', price: 1.29, unit: 'lb', image: 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400&h=400&fit=crop', organic: false, outOfStock: false },
   { id: '5', name: 'Whole Wheat Bread', category: 'Bakery', price: 3.49, unit: 'loaf', image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=400&fit=crop', organic: false, outOfStock: false },

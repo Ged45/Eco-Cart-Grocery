@@ -20,17 +20,24 @@ export function Categories() {
   const categories = CATEGORIES.filter((c) => c !== 'All');
 
   return (
-    <div className="max-w-7xl mx-32 px-4 sm:px-6 lg:px-8 py-8">
+    <div className="w-full max-w-screen-xl 2xl:max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 py-8">
+      
+      {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
+        className="mb-8 text-center sm:text-left"
       >
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Shop by Category</h2>
-        <p className="text-gray-600">Explore our carefully curated selections</p>
+        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          Shop by Category
+        </h2>
+        <p className="text-gray-600">
+          Explore our carefully curated selections
+        </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Categories Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
         {categories.map((category, index) => {
           const Icon = categoryIcons[category];
           const count = getCategoryCount(category);
@@ -44,17 +51,23 @@ export function Categories() {
             >
               <Link to={`/?category=${category}`}>
                 <motion.div
-                  whileHover={{ scale: 1.02, y: -4 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow p-8 cursor-pointer border border-gray-100"
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 p-6 sm:p-8 cursor-pointer border border-gray-100 h-full"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                      {Icon && <Icon className="w-8 h-8 text-green-600" />}
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-green-100 rounded-full flex items-center justify-center">
+                      {Icon && <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-green-600" />}
                     </div>
-                    <span className="text-sm text-gray-500">{count} products</span>
+                    <span className="text-xs sm:text-sm text-gray-500">
+                      {count} products
+                    </span>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{category}</h3>
+
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">
+                    {category}
+                  </h3>
+
                   <p className="text-gray-600 text-sm">
                     Browse our fresh {category.toLowerCase()}
                   </p>
@@ -65,22 +78,26 @@ export function Categories() {
         })}
       </div>
 
-      {/* Featured Category Banner */}
+      {/* Featured Banner */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="mt-12 bg-gradient-to-r from-green-600 to-green-500 rounded-2xl p-8 text-white"
+        className="mt-10 sm:mt-12 bg-gradient-to-r from-green-600 to-green-500 rounded-2xl p-6 sm:p-8 text-white text-center sm:text-left"
       >
-        <h3 className="text-2xl font-bold mb-2">Organic Collection</h3>
-        <p className="mb-4 text-green-50">
+        <h3 className="text-xl sm:text-2xl font-bold mb-2">
+          Organic Collection
+        </h3>
+
+        <p className="mb-4 text-green-50 text-sm sm:text-base">
           Discover our premium selection of certified organic products
         </p>
+
         <Link to="/?organic=true">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
+            className="bg-white text-green-600 px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors"
           >
             View Organic Products
           </motion.button>
@@ -89,4 +106,5 @@ export function Categories() {
     </div>
   );
 }
+
 export default Categories;
