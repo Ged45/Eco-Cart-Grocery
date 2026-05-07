@@ -46,9 +46,7 @@ export function ShoppingCart({
                 <ShoppingBag className="w-6 h-6 text-green-600" />
                 <div>
                   <h2 className="text-xl font-semibold">Your Cart</h2>
-                  <p className="text-sm text-gray-500">
-                    {itemCount} items
-                  </p>
+                  <p className="text-sm text-gray-500">{itemCount} items</p>
                 </div>
               </div>
 
@@ -65,9 +63,7 @@ export function ShoppingCart({
               {cartItems.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-center">
                   <ShoppingBag className="w-16 h-16 text-gray-300 mb-4" />
-                  <p className="text-gray-500 mb-2">
-                    Your cart is empty
-                  </p>
+                  <p className="text-gray-500 mb-2">Your cart is empty</p>
                   <p className="text-sm text-gray-400">
                     Add some products to get started!
                   </p>
@@ -101,9 +97,13 @@ export function ShoppingCart({
 
                           <div className="flex items-center gap-2">
                             <button
-                              onClick={() =>
-                                onUpdateQuantity(item.id, item.quantity - 1)
-                              }
+                              onClick={() => {
+                                if (item.quantity === 1) {
+                                  onRemoveItem(item.id);
+                                } else {
+                                  onUpdateQuantity(item.id, -1);
+                                }
+                              }}
                               className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded hover:bg-white"
                             >
                               <Minus className="w-3 h-3" />
@@ -114,9 +114,7 @@ export function ShoppingCart({
                             </span>
 
                             <button
-                              onClick={() =>
-                                onUpdateQuantity(item.id, item.quantity + 1)
-                              }
+                              onClick={() => onUpdateQuantity(item.id, 1)}
                               className="w-7 h-7 flex items-center justify-center border border-gray-300 rounded hover:bg-white"
                             >
                               <Plus className="w-3 h-3" />
@@ -152,15 +150,16 @@ export function ShoppingCart({
                     ${total.toFixed(2)}
                   </span>
                 </div>
-                 <Link to="/checkout">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold"
-                >
-                  Proceed to Checkout
-                </motion.button>
-                  </Link>
+
+                <Link to="/checkout">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-semibold"
+                  >
+                    Proceed to Checkout
+                  </motion.button>
+                </Link>
               </div>
             )}
           </motion.div>
@@ -169,4 +168,5 @@ export function ShoppingCart({
     </AnimatePresence>
   );
 }
+
 export default ShoppingCart;
