@@ -1,25 +1,74 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { Heart } from "lucide-react";
 
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
+  const { addToCart, toggleFavorite, isFavorite } = useCart();
+  const { isLoggedIn } = useAuth();
+  const favorite = isFavorite(product.id);
+
+  const handleImageClick = () => {
+    navigate(`/product/${product.id}`);
+  };
+
+  const handleAddToCart = (e) => {
+    e.stopPropagation(); // Prevents navigation
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    addToCart(product, quantity);
+  };
+
+  const handleToggleFavorite = (e) => {
+    e.stopPropagation();
+    if (!isLoggedIn) {
+      navigate("/login");
+      return;
+    }
+    toggleFavorite(product);
+  };
+
+  const handleIncrement = (e) => {
+    e.stopPropagation(); // Prevents navigation
+    setQuantity((q) => q + 1);
+  };
+
+  const handleDecrement = (e) => {
+    e.stopPropagation(); // Prevents navigation
+    setQuantity((q) => Math.max(1, q - 1));
+  };
 
   return (
-    <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 
-                    shadow-sm hover:shadow-xl/30 
-                    transform hover:-translate-y-1 
-                    transition duration-300 ease-in-out
-                    hover: cursor-pointer
-                    ${product.outOfStock ? "opacity-80" : ""}
-                    `}>
-      
+    <div
+      className={`bg-white rounded-2xl p-4 flex flex-col gap-3 
+      shadow-sm hover:shadow-xl/30 
+      transform hover:-translate-y-1 
+      transition duration-300 ease-in-out
+      ${product.outOfStock ? "opacity-80" : ""}`}
+    >
       <div className="relative overflow-hidden rounded-xl">
         <img
           src={product.image}
           alt={product.name}
-          className={`w-full h-40 object-cover 
-                     transition duration-300 ease-in-out 
-                     ${product.outOfStock ? "grayscale" : "hover:scale-110"}`}
+          onClick={handleImageClick}
+          className={`w-full h-40 object-cover cursor-pointer
+          transition duration-300 ease-in-out 
+          ${product.outOfStock ? "grayscale" : "hover:scale-110"}`}
         />
+
+        <button
+          onClick={handleToggleFavorite}
+          className={`absolute top-2 left-2 p-2 rounded-full transition shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500
+            ${favorite ? "bg-red-500 text-white" : "bg-white text-gray-500 hover:bg-green-100"}`}
+          title={favorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          <Heart className="w-5 h-5" />
+        </button>
 
         {product.organic && !product.outOfStock && (
           <span className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
@@ -27,7 +76,6 @@ const ProductCard = ({ product }) => {
           </span>
         )}
 
-        {/* OUT OF STOCK OVERLAY */}
         {product.outOfStock && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center rounded-xl">
             <span className="text-white font-semibold text-sm">
@@ -50,8 +98,8 @@ const ProductCard = ({ product }) => {
       <div className="flex items-center gap-2">
         <button
           disabled={product.outOfStock}
-          onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-          className="px-3 py-1 bg-gray-100 rounded-lg hover: cursor-pointer disabled:opacity-50"
+          onClick={handleDecrement}
+          className="px-3 py-1 bg-gray-100 rounded-lg disabled:opacity-50"
         >
           -
         </button>
@@ -60,16 +108,17 @@ const ProductCard = ({ product }) => {
 
         <button
           disabled={product.outOfStock}
-          onClick={() => setQuantity((q) => q + 1)}
-          className="px-3 py-1 bg-gray-100 rounded-lg hover: cursor-pointer disabled:opacity-50"
+          onClick={handleIncrement}
+          className="px-3 py-1 bg-gray-100 rounded-lg disabled:opacity-50"
         >
           +
         </button>
       </div>
 
       <button
+        onClick={handleAddToCart}
         disabled={product.outOfStock}
-        className={`mt-auto py-2 rounded-xl text-white transition hover: cursor-pointer
+        className={`mt-auto py-2 rounded-xl text-white transition w-full
         ${
           product.outOfStock
             ? "bg-gray-400 cursor-not-allowed"
@@ -83,3 +132,4 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
+        

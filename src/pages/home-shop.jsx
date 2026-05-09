@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Leaf } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,9 +22,23 @@ const productsWithStock = MOCK_PRODUCTS.map((product) => ({
 }));
 
 const HomeShop = () => {
+  const [searchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [search, setSearch] = useState("");
   const [organicOnly, setOrganicOnly] = useState(false);
+
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    const organicParam = searchParams.get("organic");
+
+    if (categoryParam && categories.includes(categoryParam)) {
+      setSelectedCategory(categoryParam);
+    } else {
+      setSelectedCategory("All");
+    }
+
+    setOrganicOnly(organicParam === "true");
+  }, [searchParams]);
 
   const filteredProducts = productsWithStock.filter((product) => {
     const matchesCategory =
